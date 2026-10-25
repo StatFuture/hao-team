@@ -1,0 +1,12 @@
+{
+  "name": "测试成员甲（非真实人员)",
+  "role": "测试教师",
+  "type": "teacher",
+  "photo": "media/images/file-2.png",
+  "bio": "仅用于检验成员卡片和个人介绍页面，不代表真实团队成员。",
+  "body": "本资料为操作练习。用于检查姓名、身份、简介和详情页是否分别显示。练习完成后隐藏。\n",
+  "demo": true,
+  "published": true,
+  "order": 0,
+  "layoutDemo": false
+}
