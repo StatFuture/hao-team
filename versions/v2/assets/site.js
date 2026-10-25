@@ -87,6 +87,6 @@ window.addEventListener('blur',cancelNavigationHover);
 window.addEventListener('resize',cancelNavigationHover);
 desktopHoverNavigation.addEventListener('change',cancelNavigationHover);
 document.querySelector('.skip').addEventListener('click',e=>{e.preventDefault();main.focus();main.scrollIntoView();});
-const {plainParagraphs,recordBody,renderMemberDetail,renderRecordDetail}=createReadingRenderer({esc,media,get,kinds,labels,shell,currentQuery,returnQuery,title,members,pageNumber,pageSize,isStudent,P,S,memberPhoto,emailLink,ext,demoBadge,list});
+const {plainParagraphs,recordBody,renderMemberDetail,renderRecordDetail}=createReadingRenderer({esc,media,get,kinds,labels,shell,currentQuery,returnQuery,title,members,pageNumber,pageSize,isStudent,P,S,memberPhoto,emailLink,ext,demoBadge,list,fields,empty});
 window.addEventListener('hashchange',()=>{render();main.focus({preventScroll:true})});render();
 })();

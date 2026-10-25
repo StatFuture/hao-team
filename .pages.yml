@@ -164,7 +164,7 @@ content:
     type: block
     list: true
     blockKey: type
-    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
     - name: text
       label: 文字段
@@ -287,9 +287,28 @@ content:
   - name: content
     label: 正文内容（按这里的顺序显示）
     type: block
-    list: true
+    list:
+      default:
+      - type: text
+        heading: 活动介绍
+        text: ''
+      - type: image
+        image: ''
+        caption: ''
+      - type: text
+        heading: 活动过程
+        text: ''
+      - type: video
+        video: ''
+        url: ''
+      - type: text
+        heading: 活动总结
+        text: ''
+      - type: file
+        file: ''
+        label: ''
     blockKey: type
-    description: 新增时提供“介绍文字→图片→过程文字→视频→总结文字→附件”的空白模板。只是起点：每段可移动、删除或继续添加，空白段不会在网页显示。
+    description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
     - name: text
       label: 文字段
@@ -363,25 +382,6 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
-    default:
-    - type: text
-      heading: 活动介绍
-      text: ''
-    - type: image
-      image: ''
-      caption: ''
-    - type: text
-      heading: 活动过程
-      text: ''
-    - type: video
-      video: ''
-      url: ''
-    - type: text
-      heading: 活动总结
-      text: ''
-    - type: file
-      file: ''
-      label: ''
   - name: body
     label: 正文
     type: text
@@ -518,6 +518,36 @@ content:
       collapsible:
         collapsed: true
         summary: '{title}'
+      default:
+      - title: 个人简介
+        kind: content
+        content:
+        - type: text
+          text: ''
+      - title: 教育背景
+        kind: content
+        content:
+        - type: text
+          text: ''
+      - title: 工作经历
+        kind: content
+        content:
+        - type: text
+          text: ''
+      - title: 科研项目
+        kind: projects
+        content: []
+      - title: 代表性学术论文
+        kind: papers
+        content: []
+      - title: 荣誉奖励
+        kind: awards
+        content: []
+      - title: 教学与招生
+        kind: content
+        content:
+        - type: text
+          text: ''
     description: 每个章节单独添加。可以上下移动章节，未填写的章节不显示。教师可参考个人简介、教育背景、工作经历、科研项目、代表论文、荣誉、教学与招生。学生只填适用内容。
     fields:
     - name: title
@@ -543,7 +573,7 @@ content:
       type: block
       list: true
       blockKey: type
-      description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+      description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
       blocks:
       - name: text
         label: 文字段
@@ -617,36 +647,6 @@ content:
           label: 页面上显示的附件名称
           type: string
           description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
-    default:
-    - title: 个人简介
-      kind: content
-      content:
-      - type: text
-        text: ''
-    - title: 教育背景
-      kind: content
-      content:
-      - type: text
-        text: ''
-    - title: 工作经历
-      kind: content
-      content:
-      - type: text
-        text: ''
-    - title: 科研项目
-      kind: projects
-      content: []
-    - title: 代表性学术论文
-      kind: papers
-      content: []
-    - title: 荣誉奖励
-      kind: awards
-      content: []
-    - title: 教学与招生
-      kind: content
-      content:
-      - type: text
-        text: ''
   - name: body
     label: 详细个人介绍
     type: text
@@ -700,7 +700,7 @@ content:
     type: block
     list: true
     blockKey: type
-    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
     - name: text
       label: 文字段
@@ -885,7 +885,7 @@ content:
     type: block
     list: true
     blockKey: type
-    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
     - name: text
       label: 文字段
@@ -1050,7 +1050,7 @@ content:
     type: block
     list: true
     blockKey: type
-    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
     - name: text
       label: 文字段
@@ -1201,7 +1201,7 @@ content:
     type: block
     list: true
     blockKey: type
-    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
     - name: text
       label: 文字段
@@ -1361,7 +1361,7 @@ content:
     type: block
     list: true
     blockKey: type
-    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
     - name: text
       label: 文字段
@@ -1503,7 +1503,7 @@ content:
     type: block
     list: true
     blockKey: type
-    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
     - name: text
       label: 文字段
@@ -1610,7 +1610,7 @@ content:
     type: block
     list: true
     blockKey: type
-    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
     - name: text
       label: 文字段
@@ -1780,7 +1780,7 @@ content:
     type: block
     list: true
     blockKey: type
-    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
     - name: text
       label: 文字段

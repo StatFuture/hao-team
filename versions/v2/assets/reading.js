@@ -1,6 +1,6 @@
 /* Article and member layouts. Formatted HTML is sanitized during the static build. */
 function createReadingRenderer(context){
-const {esc,media,get,kinds,labels,shell,currentQuery,returnQuery,title,members,pageNumber,pageSize,isStudent,P,S,memberPhoto,emailLink,ext,demoBadge,list}=context;
+const {esc,media,get,kinds,labels,shell,currentQuery,returnQuery,title,members,pageNumber,pageSize,isStudent,P,S,memberPhoto,emailLink,ext,demoBadge,list,fields,empty}=context;
 function plainParagraphs(value){return String(value||'').trim().split(/\n\s*\n/).filter(Boolean).map(p=>`<p>${esc(p).replaceAll('\n','<br>')}</p>`).join('');}
 function recordBody(x){return x.contentHtml?`<div class="content-flow">${x.contentHtml}</div>`:`<div class="content-flow legacy-body">${plainParagraphs(x.body)}<div class="legacy-media">${media(x)}</div></div>`;}
 function renderRecordDetail(section,kind,id){
