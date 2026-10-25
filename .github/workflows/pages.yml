@@ -21,6 +21,7 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - run: python scripts/test_v2.py
+      - run: python scripts/test_content_blocks.py
       - run: python scripts/build_standalone.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

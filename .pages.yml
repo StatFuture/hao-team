@@ -33,23 +33,25 @@ media:
   rename: safe
 content:
 - name: v2_settings
-  label: 第二版｜首页与展示设置
+  label: 网站与首页设置
   type: file
   path: versions/v2/data/settings.json
   format: json
   fields:
   - name: demoMode
-    label: 显示多数据排版演示
+    label: 显示排版演示资料（练习期间保留）
     type: boolean
-    description: 开启后使用演示介绍和演示记录；关闭并保存后恢复正式资料。演示内容不代表真实团队资料。
+    description: 目前保持开启。演示新闻、成员、项目和校园试验轮播不是真实团队资料，练习结束后统一清理。
   - name: showPersonalProfile
     label: 展示本仓库个人资料副本
     type: boolean
     description: 仅使用本仓库保存的副本，不会读取或修改第一版网站。当前关闭，成员请在团队成员栏目填写。
+    hidden: true
   - name: showSharedResearch
     label: 展示本仓库保存的个人成果副本
     type: boolean
     description: 副本在拆分时保存，此后与第一版各自维护，不会同步。当前关闭。
+    hidden: true
   - name: school
     label: 学校
     type: string
@@ -59,9 +61,6 @@ content:
   - name: teamName
     label: 团队名称
     type: string
-  - name: labIntro
-    label: 实验室简介
-    type: text
   - name: contactAddress
     label: 团队联系地址
     type: string
@@ -71,23 +70,6 @@ content:
   - name: contactEmail
     label: 团队联系邮箱
     type: string
-  - name: admissionLinks
-    label: 学校招生链接
-    type: object
-    list: true
-    fields:
-    - name: label
-      label: 链接名称
-      type: string
-    - name: url
-      label: 网址
-      type: string
-  - name: teacherHomepage
-    label: 教师主页网址
-    type: string
-  - name: admissionNote
-    label: 招生补充说明（经核实后填写）
-    type: text
   - name: pageSize
     label: 每页条数
     type: select
@@ -150,40 +132,7 @@ content:
       type: boolean
       default: false
       description: 开启时随多数据演示开关显示；换成正式团队照片后关闭此项。
-  - name: researchAreas
-    label: 团队研究方向（未填写时留空）
-    type: object
-    list: true
-    fields:
-    - name: title
-      label: 方向名称
-      type: string
-    - name: description
-      label: 研究介绍
-      type: text
-    - name: body
-      label: 详细研究介绍
-      type: text
-    - name: participants
-      label: 参与成员
-      type: text
-  - name: admissionsIntro
-    label: 团队招生与培养说明
-    type: text
-  - name: admissionContacts
-    label: 招生联系导师
-    type: object
-    list: true
-    fields:
-    - name: name
-      label: 姓名
-      type: string
-    - name: description
-      label: 方向与培养说明
-      type: text
-    - name: email
-      label: 邮箱
-      type: string
+    description: 这里的照片用于首页轮播；文章配图应在对应文章正文中添加。多张照片按序号排列，自动与手动切换均保留。
   - name: autoPlay
     label: 首页图片自动轮换
     type: boolean
@@ -200,8 +149,103 @@ content:
     type: boolean
     description: 仅用于查看排版；不是实际成员或新闻。有真实新闻后自动显示真实内容。
     default: false
+- name: v2_lab
+  label: 实验室简介
+  type: file
+  path: versions/v2/data/lab.json
+  format: json
+  fields:
+  - name: intro
+    label: 简介文字（不使用混排时填写）
+    type: text
+    description: 填写团队成立背景、研究领域和团队概况，不要写个人履历。
+  - name: content
+    label: 正文内容（按这里的顺序显示）
+    type: block
+    list: true
+    blockKey: type
+    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    blocks:
+    - name: text
+      label: 文字段
+      fields:
+      - name: heading
+        label: 段落小标题（可不填）
+        type: string
+      - name: text
+        label: 文字内容
+        type: rich-text
+        options:
+          format: html
+          media: images
+          switcher: false
+    - name: image
+      label: 图片段
+      fields:
+      - name: image
+        label: 选择或上传图片
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 图片下方说明（可不填）
+        type: string
+      - name: alt
+        label: 图片内容描述（便于无障碍阅读，可不填）
+        type: string
+      - name: width
+        label: 显示宽度
+        type: select
+        options:
+          values:
+          - name: standard
+            label: 适中，保持原图比例
+          - name: wide
+            label: 较宽，不超过正文宽度
+        default: standard
+    - name: video
+      label: 视频段
+      fields:
+      - name: video
+        label: 上传短视频（与播放网址二选一）
+        type: file
+        options:
+          media: videos
+        description: mp4或webm，当前单个不超过20 MB；长视频优先使用播放网址。
+      - name: url
+        label: 视频播放网址（已上传视频时留空）
+        type: string
+      - name: poster
+        label: 视频封面（可不填）
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 视频说明（可不填）
+        type: string
+      - name: label
+        label: 外部视频链接文字（可不填）
+        type: string
+    - name: file
+      label: 附件段
+      fields:
+      - name: file
+        label: 选择或上传附件
+        type: file
+        options:
+          media: files
+      - name: label
+        label: 页面上显示的附件名称
+        type: string
+        description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+  - &id001
+    name: layoutDemo
+    label: 属于排版演示资料
+    type: boolean
+    default: false
+    description: 目前练习期间保留；关闭网站演示开关后，这些记录不会显示。真实资料保持关闭。
 - name: v2_news
-  label: 第二版｜新闻
+  label: 团队新闻
   type: collection
   path: versions/v2/content/news
   format: json
@@ -212,74 +256,190 @@ content:
   view:
     fields:
     - title
+    - date
+    - pinned
     - published
-    - order
     primary: title
     sort:
-    - order
+    - date
+    - pinned
     - title
     default:
-      sort: order
-      order: asc
+      sort: date
+      order: desc
   fields:
   - name: title
     label: 新闻标题
     type: string
     required: true
+    description: 填写真实新闻标题；操作练习请以【操作测试】开头。
   - name: date
     label: 日期
     type: date
     options:
       format: yyyy-MM-dd
+    required: true
+    description: 填写活动或新闻的实际日期；普通新闻按日期从新到旧显示。
   - name: summary
     label: 摘要
     type: text
+    description: 只用于新闻列表，建议一两句话；详情正文不用再重复粘贴摘要。
+  - name: content
+    label: 正文内容（按这里的顺序显示）
+    type: block
+    list: true
+    blockKey: type
+    description: 新增时提供“介绍文字→图片→过程文字→视频→总结文字→附件”的空白模板。只是起点：每段可移动、删除或继续添加，空白段不会在网页显示。
+    blocks:
+    - name: text
+      label: 文字段
+      fields:
+      - name: heading
+        label: 段落小标题（可不填）
+        type: string
+      - name: text
+        label: 文字内容
+        type: rich-text
+        options:
+          format: html
+          media: images
+          switcher: false
+    - name: image
+      label: 图片段
+      fields:
+      - name: image
+        label: 选择或上传图片
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 图片下方说明（可不填）
+        type: string
+      - name: alt
+        label: 图片内容描述（便于无障碍阅读，可不填）
+        type: string
+      - name: width
+        label: 显示宽度
+        type: select
+        options:
+          values:
+          - name: standard
+            label: 适中，保持原图比例
+          - name: wide
+            label: 较宽，不超过正文宽度
+        default: standard
+    - name: video
+      label: 视频段
+      fields:
+      - name: video
+        label: 上传短视频（与播放网址二选一）
+        type: file
+        options:
+          media: videos
+        description: mp4或webm，当前单个不超过20 MB；长视频优先使用播放网址。
+      - name: url
+        label: 视频播放网址（已上传视频时留空）
+        type: string
+      - name: poster
+        label: 视频封面（可不填）
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 视频说明（可不填）
+        type: string
+      - name: label
+        label: 外部视频链接文字（可不填）
+        type: string
+    - name: file
+      label: 附件段
+      fields:
+      - name: file
+        label: 选择或上传附件
+        type: file
+        options:
+          media: files
+      - name: label
+        label: 页面上显示的附件名称
+        type: string
+        description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+    default:
+    - type: text
+      heading: 活动介绍
+      text: ''
+    - type: image
+      image: ''
+      caption: ''
+    - type: text
+      heading: 活动过程
+      text: ''
+    - type: video
+      video: ''
+      url: ''
+    - type: text
+      heading: 活动总结
+      text: ''
+    - type: file
+      file: ''
+      label: ''
   - name: body
     label: 正文
     type: text
-    description: 支持多段文字；配图、视频和附件在下方单独添加。
+    description: 旧版兼容资料，已保留。新内容请使用正文内容段编辑。
+    hidden: true
   - name: cover
     label: 列表封面（留空使用第一张配图）
     type: image
     options:
       media: images
+    description: 只控制新闻列表缩略图，不会在正文重复插入；留空时取正文第一张图片。
   - name: pinned
-    label: 置顶
+    label: 置顶（优先于日期）
     type: boolean
+    description: 只给重要通知开启。置顶新闻排在所有普通新闻之前。
   - name: images
     label: 配图
     type: image
     list: true
     options:
       media: images
+    hidden: true
+    description: 旧版兼容资料，已保留。新内容请使用正文内容段编辑。
   - name: attachment
     label: 资料附件
     type: file
     options:
       media: files
+    hidden: true
+    description: 旧版兼容资料，已保留。新内容请使用正文内容段编辑。
   - name: video
     label: 上传短视频
     type: file
     options:
       media: videos
-    description: 试验约定单个不超过20 MB；长视频请填写播放链接。
+    description: 旧版兼容资料，已保留。新内容请使用正文内容段编辑。
+    hidden: true
   - name: videoUrl
     label: 视频播放链接
     type: string
-    description: 可填写 https 视频文件或视频平台页面网址。
+    description: 旧版兼容资料，已保留。新内容请使用正文内容段编辑。
+    hidden: true
   - name: poster
     label: 视频封面
     type: image
     options:
       media: images
+    hidden: true
+    description: 旧版兼容资料，已保留。新内容请使用正文内容段编辑。
   - name: published
     label: 在网站显示
     type: boolean
-    description: 只控制第二版显示，不改变第一版。
+    description: 关闭为草稿。保存后等待发布完成，再刷新网站检查。关闭显示不等于文件保密。
+    default: false
   - name: order
-    label: 排列序号
+    label: 置顶新闻之间的序号
     type: number
-    description: 数字越小越靠前；同序号的新闻按日期从新到旧排列。
+    description: 只对置顶新闻生效；普通新闻不必填写，按日期排序。
     options:
       min: 0
   - name: layoutDemo
@@ -290,7 +450,7 @@ content:
   exclude:
   - .gitkeep
 - name: v2_members
-  label: 第二版｜团队成员
+  label: 团队成员
   type: collection
   path: versions/v2/content/members
   format: json
@@ -301,6 +461,8 @@ content:
   view:
     fields:
     - name
+    - type
+    - role
     - published
     - order
     primary: name
@@ -318,6 +480,7 @@ content:
   - name: role
     label: 职务或身份
     type: string
+    description: 例如教授、副教授、硕士研究生。不要在这里写教育经历。
   - name: type
     label: 成员类别
     type: select
@@ -327,17 +490,167 @@ content:
         label: 教师
       - name: student
         label: 学生
+    required: true
+    description: 必须单独选择教师或学生，不能仅在职务中写学生。
   - name: photo
     label: 成员照片（不上传时使用默认头像）
     type: image
     options:
       media: images
-  - name: bio
-    label: 简介
+  - name: mentor
+    label: 导师身份（学生可不填）
+    type: string
+    description: 例如硕士生导师、博士生导师。
+  - name: researchFocus
+    label: 研究方向
     type: text
+  - name: office
+    label: 办公地点（可不填）
+    type: string
+  - name: bio
+    label: 列表卡片简介
+    type: text
+    description: 建议50至100字。完整介绍写到下方教师／学生章节中。
+  - name: sections
+    label: 个人介绍章节（按这里的顺序显示）
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{title}'
+    description: 每个章节单独添加。可以上下移动章节，未填写的章节不显示。教师可参考个人简介、教育背景、工作经历、科研项目、代表论文、荣誉、教学与招生。学生只填适用内容。
+    fields:
+    - name: title
+      label: 章节标题
+      type: string
+      required: true
+    - name: kind
+      label: 内容来源
+      type: select
+      options:
+        values:
+        - name: content
+          label: 手动编辑文字、图片等
+        - name: projects
+          label: 自动列出关联到本人的团队项目
+        - name: papers
+          label: 自动列出关联到本人的团队论文
+        - name: awards
+          label: 自动列出关联到本人的团队荣誉
+      default: content
+    - name: content
+      label: 本章节内容（自动列出成果时不用填写）
+      type: block
+      list: true
+      blockKey: type
+      description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+      blocks:
+      - name: text
+        label: 文字段
+        fields:
+        - name: heading
+          label: 段落小标题（可不填）
+          type: string
+        - name: text
+          label: 文字内容
+          type: rich-text
+          options:
+            format: html
+            media: images
+            switcher: false
+      - name: image
+        label: 图片段
+        fields:
+        - name: image
+          label: 选择或上传图片
+          type: image
+          options:
+            media: images
+        - name: caption
+          label: 图片下方说明（可不填）
+          type: string
+        - name: alt
+          label: 图片内容描述（便于无障碍阅读，可不填）
+          type: string
+        - name: width
+          label: 显示宽度
+          type: select
+          options:
+            values:
+            - name: standard
+              label: 适中，保持原图比例
+            - name: wide
+              label: 较宽，不超过正文宽度
+          default: standard
+      - name: video
+        label: 视频段
+        fields:
+        - name: video
+          label: 上传短视频（与播放网址二选一）
+          type: file
+          options:
+            media: videos
+          description: mp4或webm，当前单个不超过20 MB；长视频优先使用播放网址。
+        - name: url
+          label: 视频播放网址（已上传视频时留空）
+          type: string
+        - name: poster
+          label: 视频封面（可不填）
+          type: image
+          options:
+            media: images
+        - name: caption
+          label: 视频说明（可不填）
+          type: string
+        - name: label
+          label: 外部视频链接文字（可不填）
+          type: string
+      - name: file
+        label: 附件段
+        fields:
+        - name: file
+          label: 选择或上传附件
+          type: file
+          options:
+            media: files
+        - name: label
+          label: 页面上显示的附件名称
+          type: string
+          description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+    default:
+    - title: 个人简介
+      kind: content
+      content:
+      - type: text
+        text: ''
+    - title: 教育背景
+      kind: content
+      content:
+      - type: text
+        text: ''
+    - title: 工作经历
+      kind: content
+      content:
+      - type: text
+        text: ''
+    - title: 科研项目
+      kind: projects
+      content: []
+    - title: 代表性学术论文
+      kind: papers
+      content: []
+    - title: 荣誉奖励
+      kind: awards
+      content: []
+    - title: 教学与招生
+      kind: content
+      content:
+      - type: text
+        text: ''
   - name: body
     label: 详细个人介绍
     type: text
+    hidden: true
   - name: demo
     label: 试验用示例成员
     type: boolean
@@ -351,7 +664,8 @@ content:
   - name: published
     label: 在网站显示
     type: boolean
-    description: 只控制第二版显示，不改变第一版。
+    description: 关闭为草稿。保存后等待发布完成，再刷新网站检查。关闭显示不等于文件保密。
+    default: false
   - name: order
     label: 排列序号
     type: number
@@ -365,115 +679,120 @@ content:
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
   exclude:
   - .gitkeep
-- name: v2_resources
-  label: 第二版｜图片视频资料
+- name: v2_directions
+  label: 研究方向
   type: collection
-  path: versions/v2/content/resources
+  path: versions/v2/content/directions
   format: json
-  filename:
-    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
-    field: create
-  subfolders: false
-  view:
-    fields:
-    - title
-    - published
-    - order
-    primary: title
-    sort:
-    - order
-    - title
-    default:
-      sort: order
-      order: asc
   fields:
   - name: title
-    label: 资料标题
+    label: 研究方向名称
     type: string
     required: true
-  - name: body
-    label: 说明
+  - name: description
+    label: 首页／列表用的简短介绍
     type: text
-  - name: target
-    label: 放置栏目
-    type: select
-    options:
-      values:
-      - name: resources
-        label: 学术资源列表
-      - name: home
-        label: 首页
-      - name: lab
-        label: 实验室简介
-      - name: news
-        label: 团队新闻
-      - name: team
-        label: 学术团队
-      - name: research
-        label: 科学研究
-      - name: admissions
-        label: 招生信息
-  - name: position
-    label: 栏目中的位置
-    type: select
-    options:
-      values:
-      - name: before
-        label: 内容之前
-      - name: after
-        label: 内容之后
-  - name: images
-    label: 配图
-    type: image
+  - name: participants
+    label: 参与教师与团队说明
+    type: text
+  - name: content
+    label: 研究方向详细介绍
+    type: block
     list: true
-    options:
-      media: images
-  - name: attachment
-    label: 资料附件
-    type: file
-    options:
-      media: files
-  - name: video
-    label: 上传短视频
-    type: file
-    options:
-      media: videos
-    description: 试验约定单个不超过20 MB；长视频请填写播放链接。
-  - name: videoUrl
-    label: 视频播放链接
-    type: string
-    description: 可填写 https 视频文件或视频平台页面网址。
-  - name: poster
-    label: 视频封面
-    type: image
-    options:
-      media: images
+    blockKey: type
+    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    blocks:
+    - name: text
+      label: 文字段
+      fields:
+      - name: heading
+        label: 段落小标题（可不填）
+        type: string
+      - name: text
+        label: 文字内容
+        type: rich-text
+        options:
+          format: html
+          media: images
+          switcher: false
+    - name: image
+      label: 图片段
+      fields:
+      - name: image
+        label: 选择或上传图片
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 图片下方说明（可不填）
+        type: string
+      - name: alt
+        label: 图片内容描述（便于无障碍阅读，可不填）
+        type: string
+      - name: width
+        label: 显示宽度
+        type: select
+        options:
+          values:
+          - name: standard
+            label: 适中，保持原图比例
+          - name: wide
+            label: 较宽，不超过正文宽度
+        default: standard
+    - name: video
+      label: 视频段
+      fields:
+      - name: video
+        label: 上传短视频（与播放网址二选一）
+        type: file
+        options:
+          media: videos
+        description: mp4或webm，当前单个不超过20 MB；长视频优先使用播放网址。
+      - name: url
+        label: 视频播放网址（已上传视频时留空）
+        type: string
+      - name: poster
+        label: 视频封面（可不填）
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 视频说明（可不填）
+        type: string
+      - name: label
+        label: 外部视频链接文字（可不填）
+        type: string
+    - name: file
+      label: 附件段
+      fields:
+      - name: file
+        label: 选择或上传附件
+        type: file
+        options:
+          media: files
+      - name: label
+        label: 页面上显示的附件名称
+        type: string
+        description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
   - name: published
     label: 在网站显示
     type: boolean
-    description: 只控制第二版显示，不改变第一版。
+    default: false
+    description: 关闭为草稿。保存后等待发布完成，再刷新网站检查。关闭显示不等于文件保密。
   - name: order
-    label: 排列序号
+    label: 排列序号（越小越靠前）
     type: number
-    description: 数字越小越靠前；同序号的新闻按日期从新到旧排列。
+    default: 10
     options:
       min: 0
-  - name: layoutDemo
-    label: 排版演示记录
-    type: boolean
-    default: false
-    description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
-  exclude:
-  - .gitkeep
-- name: v2_overrides
-  label: 第二版｜本仓库成果副本展示调整
-  type: collection
-  path: versions/v2/content/overrides
-  format: json
+    description: 一般填10、20、30，需要插在中间可以填15。
+  - *id001
   filename:
     template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
     field: create
   subfolders: false
+  exclude:
+  - .gitkeep
   view:
     fields:
     - title
@@ -486,84 +805,8 @@ content:
     default:
       sort: order
       order: asc
-  fields:
-  - name: title
-    label: 后台备注标题
-    type: string
-    required: true
-  - name: collection
-    label: 成果类型
-    type: select
-    options:
-      values:
-      - name: projects
-        label: 科研项目
-      - name: papers
-        label: 论文
-      - name: patents
-        label: 专利
-      - name: books
-        label: 著作
-      - name: awards
-        label: 荣誉
-  - name: recordId
-    label: 原记录ID
-    type: string
-    required: true
-    description: 填写原文件名去掉.json，例如projects-001；一条成果只能有一条覆盖配置。
-  - name: body
-    label: 第二版补充正文
-    type: text
-  - name: summary
-    label: 第二版摘要
-    type: text
-  - name: hidden
-    label: 在第二版隐藏这条成果
-    type: boolean
-  - name: showOnHome
-    label: 首页展示（仅项目）
-    type: boolean
-    default: true
-  - name: images
-    label: 配图
-    type: image
-    list: true
-    options:
-      media: images
-  - name: attachment
-    label: 资料附件
-    type: file
-    options:
-      media: files
-  - name: video
-    label: 上传短视频
-    type: file
-    options:
-      media: videos
-    description: 试验约定单个不超过20 MB；长视频请填写播放链接。
-  - name: videoUrl
-    label: 视频播放链接
-    type: string
-    description: 可填写 https 视频文件或视频平台页面网址。
-  - name: poster
-    label: 视频封面
-    type: image
-    options:
-      media: images
-  - name: published
-    label: 启用这条覆盖配置
-    type: boolean
-    description: 启用后仅改变第二版的这条成果；原始记录和第一版不受影响。
-  - name: order
-    label: 排列序号
-    type: number
-    description: 数字越小越靠前；同序号的新闻按日期从新到旧排列。
-    options:
-      min: 0
-  exclude:
-  - .gitkeep
 - name: v2_projects
-  label: 第二版｜团队项目
+  label: 科研项目
   type: collection
   path: versions/v2/content/projects
   format: json
@@ -600,6 +843,7 @@ content:
     - name: value
       label: 字段内容
       type: text
+    description: 逐项添加项目来源、编号、起止时间、负责人、经费等；字段名称填项目来源，字段内容填国家自然科学基金等。没有确认的信息不要编。
   - name: published
     label: 在网站显示
     type: boolean
@@ -611,8 +855,13 @@ content:
     options:
       min: 0
   - name: researchArea
-    label: 所属团队研究方向（与设置中的方向名称一致）
-    type: string
+    label: 所属研究方向（从已建方向选择）
+    type: reference
+    options:
+      collection: v2_directions
+      value: '{primary}'
+      label: '{primary}'
+    description: 先在研究方向栏目新增，再在这里选择，避免名称手打不一致。
   - name: contributors
     label: 参与成员或负责人
     type: string
@@ -621,10 +870,99 @@ content:
     type: boolean
     default: false
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
+  - name: memberRefs
+    label: 关联成员（可选）
+    type: reference
+    options:
+      collection: v2_members
+      multiple: true
+      search: name,role
+      value: '{path}'
+      label: '{name}'
+    description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
+  - name: content
+    label: 详细介绍与配图（可不填）
+    type: block
+    list: true
+    blockKey: type
+    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    blocks:
+    - name: text
+      label: 文字段
+      fields:
+      - name: heading
+        label: 段落小标题（可不填）
+        type: string
+      - name: text
+        label: 文字内容
+        type: rich-text
+        options:
+          format: html
+          media: images
+          switcher: false
+    - name: image
+      label: 图片段
+      fields:
+      - name: image
+        label: 选择或上传图片
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 图片下方说明（可不填）
+        type: string
+      - name: alt
+        label: 图片内容描述（便于无障碍阅读，可不填）
+        type: string
+      - name: width
+        label: 显示宽度
+        type: select
+        options:
+          values:
+          - name: standard
+            label: 适中，保持原图比例
+          - name: wide
+            label: 较宽，不超过正文宽度
+        default: standard
+    - name: video
+      label: 视频段
+      fields:
+      - name: video
+        label: 上传短视频（与播放网址二选一）
+        type: file
+        options:
+          media: videos
+        description: mp4或webm，当前单个不超过20 MB；长视频优先使用播放网址。
+      - name: url
+        label: 视频播放网址（已上传视频时留空）
+        type: string
+      - name: poster
+        label: 视频封面（可不填）
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 视频说明（可不填）
+        type: string
+      - name: label
+        label: 外部视频链接文字（可不填）
+        type: string
+    - name: file
+      label: 附件段
+      fields:
+      - name: file
+        label: 选择或上传附件
+        type: file
+        options:
+          media: files
+      - name: label
+        label: 页面上显示的附件名称
+        type: string
+        description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
   exclude:
   - .gitkeep
 - name: v2_papers
-  label: 第二版｜团队论文
+  label: 学术论文
   type: collection
   path: versions/v2/content/papers
   format: json
@@ -646,13 +984,21 @@ content:
       order: asc
   fields:
   - name: title
-    label: 列表标题
+    label: 论文题目
     type: string
     required: true
   - name: citation
     label: 完整引文
     type: text
     required: true
+    description: 完整填写作者、论文题目、期刊或会议、年份、卷期页码。DOI和网址分别填下面的字段，不要把整条引文当标题。
+  - name: year
+    label: 发表年份
+    type: number
+    options:
+      min: 1900
+      max: 2200
+    description: 填写四位年份，例如2026；有年份的论文优先按年份从新到旧显示。
   - name: doi
     label: DOI
     type: string
@@ -670,8 +1016,13 @@ content:
     options:
       min: 0
   - name: researchArea
-    label: 所属团队研究方向（与设置中的方向名称一致）
-    type: string
+    label: 所属研究方向（从已建方向选择）
+    type: reference
+    options:
+      collection: v2_directions
+      value: '{primary}'
+      label: '{primary}'
+    description: 先在研究方向栏目新增，再在这里选择，避免名称手打不一致。
   - name: contributors
     label: 参与成员或负责人
     type: string
@@ -684,10 +1035,99 @@ content:
     type: boolean
     default: false
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
+  - name: memberRefs
+    label: 关联成员（可选）
+    type: reference
+    options:
+      collection: v2_members
+      multiple: true
+      search: name,role
+      value: '{path}'
+      label: '{name}'
+    description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
+  - name: content
+    label: 详细介绍与配图（可不填）
+    type: block
+    list: true
+    blockKey: type
+    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    blocks:
+    - name: text
+      label: 文字段
+      fields:
+      - name: heading
+        label: 段落小标题（可不填）
+        type: string
+      - name: text
+        label: 文字内容
+        type: rich-text
+        options:
+          format: html
+          media: images
+          switcher: false
+    - name: image
+      label: 图片段
+      fields:
+      - name: image
+        label: 选择或上传图片
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 图片下方说明（可不填）
+        type: string
+      - name: alt
+        label: 图片内容描述（便于无障碍阅读，可不填）
+        type: string
+      - name: width
+        label: 显示宽度
+        type: select
+        options:
+          values:
+          - name: standard
+            label: 适中，保持原图比例
+          - name: wide
+            label: 较宽，不超过正文宽度
+        default: standard
+    - name: video
+      label: 视频段
+      fields:
+      - name: video
+        label: 上传短视频（与播放网址二选一）
+        type: file
+        options:
+          media: videos
+        description: mp4或webm，当前单个不超过20 MB；长视频优先使用播放网址。
+      - name: url
+        label: 视频播放网址（已上传视频时留空）
+        type: string
+      - name: poster
+        label: 视频封面（可不填）
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 视频说明（可不填）
+        type: string
+      - name: label
+        label: 外部视频链接文字（可不填）
+        type: string
+    - name: file
+      label: 附件段
+      fields:
+      - name: file
+        label: 选择或上传附件
+        type: file
+        options:
+          media: files
+      - name: label
+        label: 页面上显示的附件名称
+        type: string
+        description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
   exclude:
   - .gitkeep
 - name: v2_patents
-  label: 第二版｜团队专利
+  label: 专利
   type: collection
   path: versions/v2/content/patents
   format: json
@@ -727,8 +1167,13 @@ content:
     options:
       min: 0
   - name: researchArea
-    label: 所属团队研究方向（与设置中的方向名称一致）
-    type: string
+    label: 所属研究方向（从已建方向选择）
+    type: reference
+    options:
+      collection: v2_directions
+      value: '{primary}'
+      label: '{primary}'
+    description: 先在研究方向栏目新增，再在这里选择，避免名称手打不一致。
   - name: contributors
     label: 参与成员或负责人
     type: string
@@ -741,10 +1186,99 @@ content:
     type: boolean
     default: false
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
+  - name: memberRefs
+    label: 关联成员（可选）
+    type: reference
+    options:
+      collection: v2_members
+      multiple: true
+      search: name,role
+      value: '{path}'
+      label: '{name}'
+    description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
+  - name: content
+    label: 详细介绍与配图（可不填）
+    type: block
+    list: true
+    blockKey: type
+    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    blocks:
+    - name: text
+      label: 文字段
+      fields:
+      - name: heading
+        label: 段落小标题（可不填）
+        type: string
+      - name: text
+        label: 文字内容
+        type: rich-text
+        options:
+          format: html
+          media: images
+          switcher: false
+    - name: image
+      label: 图片段
+      fields:
+      - name: image
+        label: 选择或上传图片
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 图片下方说明（可不填）
+        type: string
+      - name: alt
+        label: 图片内容描述（便于无障碍阅读，可不填）
+        type: string
+      - name: width
+        label: 显示宽度
+        type: select
+        options:
+          values:
+          - name: standard
+            label: 适中，保持原图比例
+          - name: wide
+            label: 较宽，不超过正文宽度
+        default: standard
+    - name: video
+      label: 视频段
+      fields:
+      - name: video
+        label: 上传短视频（与播放网址二选一）
+        type: file
+        options:
+          media: videos
+        description: mp4或webm，当前单个不超过20 MB；长视频优先使用播放网址。
+      - name: url
+        label: 视频播放网址（已上传视频时留空）
+        type: string
+      - name: poster
+        label: 视频封面（可不填）
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 视频说明（可不填）
+        type: string
+      - name: label
+        label: 外部视频链接文字（可不填）
+        type: string
+    - name: file
+      label: 附件段
+      fields:
+      - name: file
+        label: 选择或上传附件
+        type: file
+        options:
+          media: files
+      - name: label
+        label: 页面上显示的附件名称
+        type: string
+        description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
   exclude:
   - .gitkeep
 - name: v2_books
-  label: 第二版｜团队著作
+  label: 著作与教材
   type: collection
   path: versions/v2/content/books
   format: json
@@ -781,6 +1315,7 @@ content:
     - name: value
       label: 字段内容
       type: text
+    description: 逐项添加作者、出版社、出版年份、ISBN等；正文和封面图放在详细介绍内容段。
   - name: published
     label: 在网站显示
     type: boolean
@@ -792,8 +1327,13 @@ content:
     options:
       min: 0
   - name: researchArea
-    label: 所属团队研究方向（与设置中的方向名称一致）
-    type: string
+    label: 所属研究方向（从已建方向选择）
+    type: reference
+    options:
+      collection: v2_directions
+      value: '{primary}'
+      label: '{primary}'
+    description: 先在研究方向栏目新增，再在这里选择，避免名称手打不一致。
   - name: contributors
     label: 参与成员或负责人
     type: string
@@ -806,10 +1346,99 @@ content:
     type: boolean
     default: false
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
+  - name: memberRefs
+    label: 关联成员（可选）
+    type: reference
+    options:
+      collection: v2_members
+      multiple: true
+      search: name,role
+      value: '{path}'
+      label: '{name}'
+    description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
+  - name: content
+    label: 详细介绍与配图（可不填）
+    type: block
+    list: true
+    blockKey: type
+    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    blocks:
+    - name: text
+      label: 文字段
+      fields:
+      - name: heading
+        label: 段落小标题（可不填）
+        type: string
+      - name: text
+        label: 文字内容
+        type: rich-text
+        options:
+          format: html
+          media: images
+          switcher: false
+    - name: image
+      label: 图片段
+      fields:
+      - name: image
+        label: 选择或上传图片
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 图片下方说明（可不填）
+        type: string
+      - name: alt
+        label: 图片内容描述（便于无障碍阅读，可不填）
+        type: string
+      - name: width
+        label: 显示宽度
+        type: select
+        options:
+          values:
+          - name: standard
+            label: 适中，保持原图比例
+          - name: wide
+            label: 较宽，不超过正文宽度
+        default: standard
+    - name: video
+      label: 视频段
+      fields:
+      - name: video
+        label: 上传短视频（与播放网址二选一）
+        type: file
+        options:
+          media: videos
+        description: mp4或webm，当前单个不超过20 MB；长视频优先使用播放网址。
+      - name: url
+        label: 视频播放网址（已上传视频时留空）
+        type: string
+      - name: poster
+        label: 视频封面（可不填）
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 视频说明（可不填）
+        type: string
+      - name: label
+        label: 外部视频链接文字（可不填）
+        type: string
+    - name: file
+      label: 附件段
+      fields:
+      - name: file
+        label: 选择或上传附件
+        type: file
+        options:
+          media: files
+      - name: label
+        label: 页面上显示的附件名称
+        type: string
+        description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
   exclude:
   - .gitkeep
 - name: v2_awards
-  label: 第二版｜团队荣誉
+  label: 荣誉奖励
   type: collection
   path: versions/v2/content/awards
   format: json
@@ -849,10 +1478,408 @@ content:
     options:
       min: 0
   - name: researchArea
-    label: 所属团队研究方向（与设置中的方向名称一致）
-    type: string
+    label: 所属研究方向（从已建方向选择）
+    type: reference
+    options:
+      collection: v2_directions
+      value: '{primary}'
+      label: '{primary}'
+    description: 先在研究方向栏目新增，再在这里选择，避免名称手打不一致。
   - name: contributors
     label: 参与成员或负责人
     type: string
+  - name: memberRefs
+    label: 关联成员（可选）
+    type: reference
+    options:
+      collection: v2_members
+      multiple: true
+      search: name,role
+      value: '{path}'
+      label: '{name}'
+    description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
+  - name: content
+    label: 详细介绍与配图（可不填）
+    type: block
+    list: true
+    blockKey: type
+    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    blocks:
+    - name: text
+      label: 文字段
+      fields:
+      - name: heading
+        label: 段落小标题（可不填）
+        type: string
+      - name: text
+        label: 文字内容
+        type: rich-text
+        options:
+          format: html
+          media: images
+          switcher: false
+    - name: image
+      label: 图片段
+      fields:
+      - name: image
+        label: 选择或上传图片
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 图片下方说明（可不填）
+        type: string
+      - name: alt
+        label: 图片内容描述（便于无障碍阅读，可不填）
+        type: string
+      - name: width
+        label: 显示宽度
+        type: select
+        options:
+          values:
+          - name: standard
+            label: 适中，保持原图比例
+          - name: wide
+            label: 较宽，不超过正文宽度
+        default: standard
+    - name: video
+      label: 视频段
+      fields:
+      - name: video
+        label: 上传短视频（与播放网址二选一）
+        type: file
+        options:
+          media: videos
+        description: mp4或webm，当前单个不超过20 MB；长视频优先使用播放网址。
+      - name: url
+        label: 视频播放网址（已上传视频时留空）
+        type: string
+      - name: poster
+        label: 视频封面（可不填）
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 视频说明（可不填）
+        type: string
+      - name: label
+        label: 外部视频链接文字（可不填）
+        type: string
+    - name: file
+      label: 附件段
+      fields:
+      - name: file
+        label: 选择或上传附件
+        type: file
+        options:
+          media: files
+      - name: label
+        label: 页面上显示的附件名称
+        type: string
+        description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
   exclude:
   - .gitkeep
+- name: v2_resources
+  label: 学术资源
+  type: collection
+  path: versions/v2/content/resources
+  format: json
+  filename:
+    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
+    field: create
+  subfolders: false
+  view:
+    fields:
+    - title
+    - published
+    - order
+    primary: title
+    sort:
+    - order
+    - title
+    default:
+      sort: order
+      order: asc
+  fields:
+  - name: title
+    label: 资料标题
+    type: string
+    required: true
+  - name: content
+    label: 正文内容（按这里的顺序显示）
+    type: block
+    list: true
+    blockKey: type
+    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    blocks:
+    - name: text
+      label: 文字段
+      fields:
+      - name: heading
+        label: 段落小标题（可不填）
+        type: string
+      - name: text
+        label: 文字内容
+        type: rich-text
+        options:
+          format: html
+          media: images
+          switcher: false
+    - name: image
+      label: 图片段
+      fields:
+      - name: image
+        label: 选择或上传图片
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 图片下方说明（可不填）
+        type: string
+      - name: alt
+        label: 图片内容描述（便于无障碍阅读，可不填）
+        type: string
+      - name: width
+        label: 显示宽度
+        type: select
+        options:
+          values:
+          - name: standard
+            label: 适中，保持原图比例
+          - name: wide
+            label: 较宽，不超过正文宽度
+        default: standard
+    - name: video
+      label: 视频段
+      fields:
+      - name: video
+        label: 上传短视频（与播放网址二选一）
+        type: file
+        options:
+          media: videos
+        description: mp4或webm，当前单个不超过20 MB；长视频优先使用播放网址。
+      - name: url
+        label: 视频播放网址（已上传视频时留空）
+        type: string
+      - name: poster
+        label: 视频封面（可不填）
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 视频说明（可不填）
+        type: string
+      - name: label
+        label: 外部视频链接文字（可不填）
+        type: string
+    - name: file
+      label: 附件段
+      fields:
+      - name: file
+        label: 选择或上传附件
+        type: file
+        options:
+          media: files
+      - name: label
+        label: 页面上显示的附件名称
+        type: string
+        description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+  - name: body
+    label: 说明
+    type: text
+    hidden: true
+  - name: target
+    label: 放置栏目
+    type: select
+    options:
+      values:
+      - name: resources
+        label: 学术资源列表
+      - name: home
+        label: 首页
+      - name: lab
+        label: 实验室简介
+      - name: news
+        label: 团队新闻
+      - name: team
+        label: 学术团队
+      - name: research
+        label: 科学研究
+      - name: admissions
+        label: 招生信息
+    description: 通常选择学术资源；只有确实要附加到其他栏目时才更改。不会加入首页轮播。
+  - name: position
+    label: 栏目中的位置
+    type: select
+    options:
+      values:
+      - name: before
+        label: 内容之前
+      - name: after
+        label: 内容之后
+    description: 只控制整条资源放在栏目内容的前面或后面，不决定正文中图片的位置。正文位置由内容段顺序决定。
+  - name: images
+    label: 配图
+    type: image
+    list: true
+    options:
+      media: images
+    hidden: true
+  - name: attachment
+    label: 资料附件
+    type: file
+    options:
+      media: files
+    hidden: true
+  - name: video
+    label: 上传短视频
+    type: file
+    options:
+      media: videos
+    description: 试验约定单个不超过20 MB；长视频请填写播放链接。
+    hidden: true
+  - name: videoUrl
+    label: 视频播放链接
+    type: string
+    description: 可填写 https 视频文件或视频平台页面网址。
+    hidden: true
+  - name: poster
+    label: 视频封面
+    type: image
+    options:
+      media: images
+    hidden: true
+  - name: published
+    label: 在网站显示
+    type: boolean
+    description: 只控制第二版显示，不改变第一版。
+  - name: order
+    label: 排列序号
+    type: number
+    description: 数字越小越靠前；同序号的新闻按日期从新到旧排列。
+    options:
+      min: 0
+  - name: layoutDemo
+    label: 排版演示记录
+    type: boolean
+    default: false
+    description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
+  exclude:
+  - .gitkeep
+- name: v2_admissions
+  label: 招生信息
+  type: file
+  path: versions/v2/data/admissions.json
+  format: json
+  fields:
+  - name: intro
+    label: 招生概况（不使用混排时填写）
+    type: text
+  - name: content
+    label: 招生正文（申请要求、培养介绍、图片和附件）
+    type: block
+    list: true
+    blockKey: type
+    description: 添加文字、图片、视频或附件。使用每段的移动按钮调整上下顺序；只填需要的段。
+    blocks:
+    - name: text
+      label: 文字段
+      fields:
+      - name: heading
+        label: 段落小标题（可不填）
+        type: string
+      - name: text
+        label: 文字内容
+        type: rich-text
+        options:
+          format: html
+          media: images
+          switcher: false
+    - name: image
+      label: 图片段
+      fields:
+      - name: image
+        label: 选择或上传图片
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 图片下方说明（可不填）
+        type: string
+      - name: alt
+        label: 图片内容描述（便于无障碍阅读，可不填）
+        type: string
+      - name: width
+        label: 显示宽度
+        type: select
+        options:
+          values:
+          - name: standard
+            label: 适中，保持原图比例
+          - name: wide
+            label: 较宽，不超过正文宽度
+        default: standard
+    - name: video
+      label: 视频段
+      fields:
+      - name: video
+        label: 上传短视频（与播放网址二选一）
+        type: file
+        options:
+          media: videos
+        description: mp4或webm，当前单个不超过20 MB；长视频优先使用播放网址。
+      - name: url
+        label: 视频播放网址（已上传视频时留空）
+        type: string
+      - name: poster
+        label: 视频封面（可不填）
+        type: image
+        options:
+          media: images
+      - name: caption
+        label: 视频说明（可不填）
+        type: string
+      - name: label
+        label: 外部视频链接文字（可不填）
+        type: string
+    - name: file
+      label: 附件段
+      fields:
+      - name: file
+        label: 选择或上传附件
+        type: file
+        options:
+          media: files
+      - name: label
+        label: 页面上显示的附件名称
+        type: string
+        description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+  - name: contacts
+    label: 招生联系人
+    type: object
+    list: true
+    fields:
+    - name: name
+      label: 姓名
+      type: string
+    - name: description
+      label: 招生方向或说明
+      type: text
+    - name: email
+      label: 联系邮箱
+      type: string
+  - name: links
+    label: 学校官方招生链接
+    type: object
+    list: true
+    fields:
+    - name: label
+      label: 链接名称
+      type: string
+    - name: url
+      label: 完整网址
+      type: string
+  - name: note
+    label: 补充说明
+    type: text
+  - *id001

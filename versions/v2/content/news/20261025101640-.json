@@ -12,5 +12,27 @@
   "video": "media/videos/2.webm",
   "published": true,
   "order": 0,
-  "layoutDemo": false
+  "layoutDemo": false,
+  "content": [
+    {
+      "type": "text",
+      "text": "<p>本条为网站维护操作练习，不代表真实新闻或科研活动。</p>"
+    },
+    {
+      "type": "image",
+      "image": "media/images/file-4.png",
+      "caption": ""
+    },
+    {
+      "type": "video",
+      "video": "media/videos/2.webm",
+      "url": "",
+      "poster": ""
+    },
+    {
+      "type": "file",
+      "file": "media/files/file.pdf",
+      "label": "练习附件.pdf"
+    }
+  ]
 }

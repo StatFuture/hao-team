@@ -5,6 +5,7 @@ from PIL import Image, ImageOps
 from urllib.parse import urlsplit
 from bs4 import BeautifulSoup
 from build import Builder, read, ROOT
+from content_blocks import compile_record
 
 SHARED = ('projects', 'papers', 'patents', 'books', 'awards')
 PRIVATE = ('news', 'members', 'resources')
@@ -37,7 +38,7 @@ def build_v2(root=ROOT, dest=None):
     if dest.exists():
         shutil.rmtree(dest)
     (dest / 'assets').mkdir(parents=True)
-    for name in ('site.css', 'site.js', 'school-logo.png', 'avatar-default.png'):
+    for name in ('site.css', 'reading.css', 'site.js', 'reading.js', 'school-logo.png', 'avatar-default.png'):
         shutil.copy2(source / 'assets' / name, dest / 'assets' / name)
     # Reuse the approved first-version watercolor asset, without changing version one.
     shutil.copy2(root / 'assets/image-08af15a9b38d928b.webp', dest / 'assets/campus-header.webp')
@@ -50,6 +51,21 @@ def build_v2(root=ROOT, dest=None):
         allowed_demo_settings = ('teamName', 'labIntro', 'researchAreas', 'admissionsIntro',
                                  'admissionContacts', 'contactAddress', 'contactPhone', 'contactEmail')
         settings.update({k: demo_settings[k] for k in allowed_demo_settings if k in demo_settings})
+    # Dedicated editor entries replace the former long, mixed-purpose settings form.
+    for filename, mapping in (
+        ('lab.json', {'intro':'labIntro','content':'labContent'}),
+        ('admissions.json', {'intro':'admissionsIntro','contacts':'admissionContacts',
+                             'links':'admissionLinks','note':'admissionNote','content':'admissionsContent'})):
+        path = source / 'data' / filename
+        if path.exists():
+            page = read(path)
+            if not page.get('layoutDemo') or settings.get('demoMode') is True:
+                settings.update({target:page.get(key, [] if key in ('content','contacts','links') else '') for key,target in mapping.items()})
+    direction_folder = source / 'content/directions'
+    if direction_folder.exists():
+        areas = load_records(direction_folder)
+        settings['researchAreas'] = [x for x in sorted(areas,key=lambda x:x['order'])
+                                    if not x.get('layoutDemo') or settings.get('demoMode') is True]
     try:
         page_size = int(settings.get('pageSize', 10))
     except (ValueError, TypeError):
@@ -93,8 +109,12 @@ def build_v2(root=ROOT, dest=None):
             if isinstance(order, bool) or not isinstance(order, (int, float)) or not math.isfinite(order):
                 raise ValueError('Override order must be a finite number')
         result.sort(key=lambda v: str(v.get('date', '')), reverse=True)
-        result.sort(key=lambda v: (not bool(v.get('pinned')) if kind == 'news' else False,
-                                   v.get('order', 9999), v['id'] if not v.get('date') else ''))
+        if kind == 'news':
+            # Normal news follows date; ordering numbers only arrange pinned news.
+            result.sort(key=lambda v: str(v.get('date','')), reverse=True)
+            result.sort(key=lambda v: (not bool(v.get('pinned')), v.get('order',9999) if v.get('pinned') else 0))
+        else:
+            result.sort(key=lambda v: (v.get('order',9999), v['id'] if not v.get('date') else ''))
         data['collections'][kind] = result
     if set(overrides) - used:
         raise ValueError('Override points to a missing or unpublished shared record: ' + str(set(overrides) - used))
@@ -108,6 +128,8 @@ def build_v2(root=ROOT, dest=None):
         data['collections'][kind].extend(team_records)
         data['collections'][kind].sort(key=lambda v: str(v.get('date', '')), reverse=True)
         data['collections'][kind].sort(key=lambda v: v.get('order', 9999))
+        if kind == 'papers':
+            data['collections'][kind].sort(key=lambda v: int(v.get('year') or 0),reverse=True)
     settings.pop('recordOverrides', None)
     if settings.get('demoMode') is not True:
         for kind in data['collections']:
@@ -118,6 +140,8 @@ def build_v2(root=ROOT, dest=None):
             return ''
         if not isinstance(value, str):
             raise ValueError('Asset/link must be a string')
+        if value.startswith(('/media/','/assets/')):
+            value = value[1:]
         value = assets.source(value)
         if image:
             markup = assets.image(value)
@@ -190,6 +214,15 @@ def build_v2(root=ROOT, dest=None):
     for records in data['collections'].values():
         for record in records:
             media(record)
+            compile_record(record, asset)
+            if not record.get('cover') and record.get('contentMedia'):
+                record['cover'] = record['contentMedia'][0]['url']
+    for area in settings.get('researchAreas',[]):
+        compile_record(area,asset)
+    for name in ('lab','admissions'):
+        fragment = {'content':settings.get(name+'Content',[])}
+        compile_record(fragment,asset)
+        settings[name+'Html'] = fragment.get('contentHtml','')
     payload = json.dumps(data, ensure_ascii=False, separators=(',', ':'), allow_nan=False)
     (dest / 'assets/data.js').write_text('window.SITE_DATA = ' + payload + ';\n', encoding='utf-8')
     # A newly published HTML page must not reuse a previous release's cached data/runtime.
@@ -219,7 +252,7 @@ def build_v2(root=ROOT, dest=None):
     for node in document.select('script[src], link[rel=stylesheet][href]'):
         attr = 'src' if node.name == 'script' else 'href'
         name = node[attr]
-        if name in ('assets/data.js', 'assets/site.js', 'assets/site.css'):
+        if name in ('assets/data.js', 'assets/site.js', 'assets/reading.js', 'assets/site.css', 'assets/reading.css'):
             digest = hashlib.sha256((dest / name).read_bytes()).hexdigest()[:16]
             node[attr] = name + '?v=' + digest
     (dest / 'index.html').write_text(str(document), encoding='utf-8')
