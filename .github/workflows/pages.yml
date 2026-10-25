@@ -1,7 +1,7 @@
 name: Build formal site and draft preview
 on:
   push:
-    branches: [main, drafts]
+    branches: [main]
   workflow_dispatch:
     inputs:
       payload:
@@ -55,9 +55,9 @@ jobs:
           MAIN_SHA: ${{ steps.versions.outputs.main }}
         run: |
           python scripts/preview_site.py --production _site --draft .draft-worktree/_site --draft-sha "$(git -C .draft-worktree rev-parse HEAD)" --main-sha "$MAIN_SHA" --run-id "$GITHUB_RUN_ID"
-          echo '## 草稿预览' >> "$GITHUB_STEP_SUMMARY"
-          echo '[打开预览（电脑 / 手机）](https://statfuture.github.io/hao-team/preview/)' >> "$GITHUB_STEP_SUMMARY"
-          echo '正式网页的数据仍来自 main；预览的数据来自 drafts。' >> "$GITHUB_STEP_SUMMARY"
+          echo '## �ݸ�Ԥ��' >> "$GITHUB_STEP_SUMMARY"
+          echo '[��Ԥ�������� / �ֻ���](https://statfuture.github.io/hao-team/preview/)' >> "$GITHUB_STEP_SUMMARY"
+          echo '��ʽ��ҳ������������ main��Ԥ������������ drafts��' >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
