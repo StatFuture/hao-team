@@ -250,7 +250,7 @@ content:
   path: versions/v2/content/news
   format: json
   filename:
-    template: '{year}{month}{day}-{entryKey}.json'
+    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
     field: create
   subfolders: false
   view:
@@ -447,12 +447,6 @@ content:
     type: boolean
     default: false
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
-  - name: entryKey
-    label: 系统记录编号（自动生成）
-    type: uuid
-    hidden: false
-    options:
-      editable: false
   exclude:
   - .gitkeep
 - name: v2_members
@@ -461,7 +455,7 @@ content:
   path: versions/v2/content/members
   format: json
   filename:
-    template: '{year}{month}{day}-{entryKey}.json'
+    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
     field: create
   subfolders: false
   view:
@@ -683,12 +677,6 @@ content:
     type: boolean
     default: false
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
-  - name: entryKey
-    label: 系统记录编号（自动生成）
-    type: uuid
-    hidden: false
-    options:
-      editable: false
   exclude:
   - .gitkeep
 - name: v2_directions
@@ -799,14 +787,8 @@ content:
       min: 0
     description: 一般填10、20、30，需要插在中间可以填15。
   - *id001
-  - name: entryKey
-    label: 系统记录编号（自动生成）
-    type: uuid
-    hidden: false
-    options:
-      editable: false
   filename:
-    template: '{year}{month}{day}-{entryKey}.json'
+    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
     field: create
   subfolders: false
   exclude:
@@ -829,7 +811,7 @@ content:
   path: versions/v2/content/projects
   format: json
   filename:
-    template: '{year}{month}{day}-{entryKey}.json'
+    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
     field: create
   subfolders: false
   view:
@@ -977,12 +959,6 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
-  - name: entryKey
-    label: 系统记录编号（自动生成）
-    type: uuid
-    hidden: false
-    options:
-      editable: false
   exclude:
   - .gitkeep
 - name: v2_papers
@@ -991,7 +967,7 @@ content:
   path: versions/v2/content/papers
   format: json
   filename:
-    template: '{year}{month}{day}-{entryKey}.json'
+    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
     field: create
   subfolders: false
   view:
@@ -1148,12 +1124,6 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
-  - name: entryKey
-    label: 系统记录编号（自动生成）
-    type: uuid
-    hidden: false
-    options:
-      editable: false
   exclude:
   - .gitkeep
 - name: v2_patents
@@ -1162,7 +1132,7 @@ content:
   path: versions/v2/content/patents
   format: json
   filename:
-    template: '{year}{month}{day}-{entryKey}.json'
+    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
     field: create
   subfolders: false
   view:
@@ -1305,12 +1275,6 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
-  - name: entryKey
-    label: 系统记录编号（自动生成）
-    type: uuid
-    hidden: false
-    options:
-      editable: false
   exclude:
   - .gitkeep
 - name: v2_books
@@ -1319,7 +1283,7 @@ content:
   path: versions/v2/content/books
   format: json
   filename:
-    template: '{year}{month}{day}-{entryKey}.json'
+    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
     field: create
   subfolders: false
   view:
@@ -1471,12 +1435,6 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
-  - name: entryKey
-    label: 系统记录编号（自动生成）
-    type: uuid
-    hidden: false
-    options:
-      editable: false
   exclude:
   - .gitkeep
 - name: v2_awards
@@ -1485,7 +1443,7 @@ content:
   path: versions/v2/content/awards
   format: json
   filename:
-    template: '{year}{month}{day}-{entryKey}.json'
+    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
     field: create
   subfolders: false
   view:
@@ -1619,12 +1577,6 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
-  - name: entryKey
-    label: 系统记录编号（自动生成）
-    type: uuid
-    hidden: false
-    options:
-      editable: false
   exclude:
   - .gitkeep
 - name: v2_resources
@@ -1633,7 +1585,7 @@ content:
   path: versions/v2/content/resources
   format: json
   filename:
-    template: '{year}{month}{day}-{entryKey}.json'
+    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
     field: create
   subfolders: false
   view:
@@ -1812,12 +1764,6 @@ content:
     type: boolean
     default: false
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
-  - name: entryKey
-    label: 系统记录编号（自动生成）
-    type: uuid
-    hidden: false
-    options:
-      editable: false
   exclude:
   - .gitkeep
 - name: v2_admissions

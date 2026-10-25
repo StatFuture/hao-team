@@ -2,13 +2,15 @@
 function createReadingRenderer(context){
 const {esc,media,get,kinds,labels,shell,currentQuery,returnQuery,title,members,pageNumber,pageSize,isStudent,P,S,memberPhoto,emailLink,ext,demoBadge,list,fields,empty}=context;
 function plainParagraphs(value){return String(value||'').trim().split(/\n\s*\n/).filter(Boolean).map(p=>`<p>${esc(p).replaceAll('\n','<br>')}</p>`).join('');}
-function recordBody(x){return x.contentHtml?`<div class="content-flow">${x.contentHtml}</div>`:`<div class="content-flow legacy-body">${plainParagraphs(x.body)}<div class="legacy-media">${media(x)}</div></div>`;}
+function recordBody(x){return typeof x.contentHtml==='string'?`<div class="content-flow">${x.contentHtml}</div>`:`<div class="content-flow legacy-body">${plainParagraphs(x.body)}<div class="legacy-media">${media(x)}</div></div>`;}
 function renderRecordDetail(section,kind,id){
  if(section==='research'?!kinds[kind]:section!==kind)return shell(section,empty('该内容不存在'));
  const x=get(kind).find(x=>x.id===id);if(!x)return shell(section,empty('该内容未发布或不存在'));
- const area=currentQuery().get('area'),back=section==='research'&&area?`#/research/area/${encodeURIComponent(area)}?${returnQuery()}`:`#/${section}?${returnQuery()}`;
+ const query=currentQuery(),area=query.get('area'),originMember=query.get('member');
+ const validMember=originMember&&members().some(m=>m.id===originMember);
+ const back=validMember?`#/team/member/${encodeURIComponent(originMember)}?${new URLSearchParams([...query].filter(([k])=>k!=='member'))}`:section==='research'&&area?`#/research/area/${encodeURIComponent(area)}?${returnQuery()}`:`#/${section}?${returnQuery()}`;
  const news=kind==='news';
- return shell(section,`<article class="article reading-article ${news?'news-article':''}"><header class="article-heading"><h1>${esc(x.title||title(x,kind))}</h1><p class="article-meta">${esc(kinds[kind]||labels[section])}${x.date?' · '+esc(x.date):''}</p></header>${x.contributors?`<p class="meta">参与成员：${esc(x.contributors)}</p>`:''}${x.researchArea?`<p class="meta">研究方向：${esc(x.researchArea)}</p>`:''}${!news&&x.summary?`<p class="article-lead">${esc(x.summary)}</p>`:''}${fields(x.fields)}${(x.lines||[]).map(s=>`<p>${esc(s)}</p>`).join('')}${x.text?plainParagraphs(x.text):''}${kind==='papers'&&x.citation?`<p class="citation">${esc(x.citation)}</p>`:''}${recordBody(x)}${x.doi?`<p class="meta">DOI：${esc(x.doi)}</p>`:''}${ext(x.link,'查看原文')}${x.source?`<p class="source">${ext(x.source,'资料来源')}</p>`:''}<p class="article-return"><a class="back" href="${back}">← 返回${section==='research'&&area?'研究方向':labels[section]}</a></p></article>`,true);
+ return shell(section,`<article class="article reading-article ${news?'news-article':''}"><header class="article-heading"><h1>${esc(x.title||title(x,kind))}</h1><p class="article-meta">${esc(kinds[kind]||labels[section])}${x.date?' · '+esc(x.date):''}</p></header>${x.contributors?`<p class="meta">参与成员：${esc(x.contributors)}</p>`:''}${x.researchArea?`<p class="meta">研究方向：${esc(x.researchArea)}</p>`:''}${!news&&x.summary?`<p class="article-lead">${esc(x.summary)}</p>`:''}${fields(x.fields)}${(x.lines||[]).map(s=>`<p>${esc(s)}</p>`).join('')}${x.text?plainParagraphs(x.text):''}${kind==='papers'&&x.citation?`<p class="citation">${esc(x.citation)}</p>`:''}${recordBody(x)}${x.doi?`<p class="meta">DOI：${esc(x.doi)}</p>`:''}${ext(x.link,'查看原文')}${x.source?`<p class="source">${ext(x.source,'资料来源')}</p>`:''}<p class="article-return"><a class="back" href="${back}">← 返回${validMember?'教师介绍':section==='research'&&area?'研究方向':labels[section]}</a></p></article>`,true);
 }
 function memberAssociated(kind,member){return get(kind).filter(x=>(x.memberRefs||[]).some(ref=>String(ref).split('/').pop().replace(/\.json$/,'')===member.id));}
 function renderMemberDetail(id,q){
@@ -17,8 +19,8 @@ function renderMemberDetail(id,q){
  if(!x)return shell('team',`<p class="empty">该成员未发布或不存在。</p><a class="back" href="${back}">← 返回成员名录</a>`,true);
  document.title=x.name+' · 学术团队 · '+(S.school||'天津商业大学');
  let chapters=[];
- if(x.renderedSections?.length){
-  chapters=x.renderedSections.map(s=>{let html=s.html;if(s.kind!=='content'){const rows=memberAssociated(s.kind,x);html=rows.length?list(s.kind,'research',1,50,rows):'';}return {...s,html};}).filter(s=>s.html);
+ if(Array.isArray(x.renderedSections)){
+  chapters=x.renderedSections.map(s=>{let html=s.html;if(s.kind!=='content'){const rows=memberAssociated(s.kind,x),param=s.kind+'Page';html=rows.length?list(s.kind,'research',pageNumber(q.get(param)),[10,20,50].includes(Number(q.get('size')))?Number(q.get('size')):pageSize,rows,param):'';if(html){const wrapper=document.createElement('div');wrapper.innerHTML=html;wrapper.querySelectorAll('a[href^="#/research/"]').forEach(a=>{const [route,query='']=a.getAttribute('href').split('?'),params=new URLSearchParams(query);params.set('member',x.id);for(const key of ['from','page','size'])if(q.has(key))params.set(key,q.get(key));a.setAttribute('href',route+'?'+params);});html=wrapper.innerHTML;}}return {...s,html};}).filter(s=>s.html);
  }else{
   if(x.bio)chapters.push({title:'个人简介',html:plainParagraphs(x.bio)});
   if(x.body||x.contentHtml||x.images?.length||x.video||x.attachment)chapters.push({title:'个人介绍',html:recordBody(x)});
