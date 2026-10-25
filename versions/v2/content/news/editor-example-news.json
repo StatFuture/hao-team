@@ -4,14 +4,14 @@
   "summary": "用于练习内容段的新增、上下移动和发布。所有文字均为填写提示，不代表真实活动。",
   "content": [
     {
+      "type": "text",
+      "text": "<p>第一段：填写活动发生的时间、地点、参与人员以及主要内容。本条是操作练习，不是真实团队新闻。</p>"
+    },
+    {
       "type": "image",
       "image": "media/images/v2-carousel-trial-1.webp",
       "caption": "图片一：校园试验图片，仅用于检查图片位置。",
       "width": "standard"
-    },
-    {
-      "type": "text",
-      "text": "<p>第一段：填写活动发生的时间、地点、参与人员以及主要内容。本条是操作练习，不是真实团队新闻。</p>"
     },
     {
       "type": "text",
