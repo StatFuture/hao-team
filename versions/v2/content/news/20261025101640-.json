@@ -1,0 +1,16 @@
+{
+  "title": "【操作测试】资料更新练习，请勿作为正式新闻",
+  "date": "2026-10-25",
+  "summary": "本条仅用于核对文字、配图、附件和短视频的上传与展示。",
+  "body": "本条为网站维护操作练习，不代表真实新闻或科研活动。",
+  "cover": "media/images/file-3.png",
+  "pinned": false,
+  "images": [
+    "media/images/file-4.png"
+  ],
+  "attachment": "media/files/file.pdf",
+  "video": "media/videos/2.webm",
+  "published": true,
+  "order": 0,
+  "layoutDemo": false
+}
