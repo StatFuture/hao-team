@@ -250,7 +250,7 @@ content:
   path: versions/v2/content/news
   format: json
   filename:
-    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
+    template: '{year}{month}{day}-{entryKey}.json'
     field: create
   subfolders: false
   view:
@@ -443,10 +443,16 @@ content:
     options:
       min: 0
   - name: layoutDemo
-    label: 排版演示记录
+    label: 属于排版演示资料
     type: boolean
     default: false
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
+  - name: entryKey
+    label: 系统记录标识
+    type: uuid
+    hidden: true
+    options:
+      editable: false
   exclude:
   - .gitkeep
 - name: v2_members
@@ -455,7 +461,7 @@ content:
   path: versions/v2/content/members
   format: json
   filename:
-    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
+    template: '{year}{month}{day}-{entryKey}.json'
     field: create
   subfolders: false
   view:
@@ -673,10 +679,16 @@ content:
     options:
       min: 0
   - name: layoutDemo
-    label: 排版演示记录
+    label: 属于排版演示资料
     type: boolean
     default: false
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
+  - name: entryKey
+    label: 系统记录标识
+    type: uuid
+    hidden: true
+    options:
+      editable: false
   exclude:
   - .gitkeep
 - name: v2_directions
@@ -787,8 +799,14 @@ content:
       min: 0
     description: 一般填10、20、30，需要插在中间可以填15。
   - *id001
+  - name: entryKey
+    label: 系统记录标识
+    type: uuid
+    hidden: true
+    options:
+      editable: false
   filename:
-    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
+    template: '{year}{month}{day}-{entryKey}.json'
     field: create
   subfolders: false
   exclude:
@@ -811,7 +829,7 @@ content:
   path: versions/v2/content/projects
   format: json
   filename:
-    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
+    template: '{year}{month}{day}-{entryKey}.json'
     field: create
   subfolders: false
   view:
@@ -866,7 +884,7 @@ content:
     label: 参与成员或负责人
     type: string
   - name: layoutDemo
-    label: 排版演示记录
+    label: 属于排版演示资料
     type: boolean
     default: false
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
@@ -878,7 +896,7 @@ content:
       multiple: true
       search: name,role
       value: '{path}'
-      label: '{name}'
+      label: '{fields.name}'
     description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
   - name: content
     label: 详细介绍与配图（可不填）
@@ -959,6 +977,12 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+  - name: entryKey
+    label: 系统记录标识
+    type: uuid
+    hidden: true
+    options:
+      editable: false
   exclude:
   - .gitkeep
 - name: v2_papers
@@ -967,7 +991,7 @@ content:
   path: versions/v2/content/papers
   format: json
   filename:
-    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
+    template: '{year}{month}{day}-{entryKey}.json'
     field: create
   subfolders: false
   view:
@@ -1031,7 +1055,7 @@ content:
     type: boolean
     default: false
   - name: layoutDemo
-    label: 排版演示记录
+    label: 属于排版演示资料
     type: boolean
     default: false
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
@@ -1043,7 +1067,7 @@ content:
       multiple: true
       search: name,role
       value: '{path}'
-      label: '{name}'
+      label: '{fields.name}'
     description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
   - name: content
     label: 详细介绍与配图（可不填）
@@ -1124,6 +1148,12 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+  - name: entryKey
+    label: 系统记录标识
+    type: uuid
+    hidden: true
+    options:
+      editable: false
   exclude:
   - .gitkeep
 - name: v2_patents
@@ -1132,7 +1162,7 @@ content:
   path: versions/v2/content/patents
   format: json
   filename:
-    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
+    template: '{year}{month}{day}-{entryKey}.json'
     field: create
   subfolders: false
   view:
@@ -1182,7 +1212,7 @@ content:
     type: boolean
     default: false
   - name: layoutDemo
-    label: 排版演示记录
+    label: 属于排版演示资料
     type: boolean
     default: false
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
@@ -1194,7 +1224,7 @@ content:
       multiple: true
       search: name,role
       value: '{path}'
-      label: '{name}'
+      label: '{fields.name}'
     description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
   - name: content
     label: 详细介绍与配图（可不填）
@@ -1275,6 +1305,12 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+  - name: entryKey
+    label: 系统记录标识
+    type: uuid
+    hidden: true
+    options:
+      editable: false
   exclude:
   - .gitkeep
 - name: v2_books
@@ -1283,7 +1319,7 @@ content:
   path: versions/v2/content/books
   format: json
   filename:
-    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
+    template: '{year}{month}{day}-{entryKey}.json'
     field: create
   subfolders: false
   view:
@@ -1342,7 +1378,7 @@ content:
     type: boolean
     default: false
   - name: layoutDemo
-    label: 排版演示记录
+    label: 属于排版演示资料
     type: boolean
     default: false
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
@@ -1354,7 +1390,7 @@ content:
       multiple: true
       search: name,role
       value: '{path}'
-      label: '{name}'
+      label: '{fields.name}'
     description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
   - name: content
     label: 详细介绍与配图（可不填）
@@ -1435,6 +1471,12 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+  - name: entryKey
+    label: 系统记录标识
+    type: uuid
+    hidden: true
+    options:
+      editable: false
   exclude:
   - .gitkeep
 - name: v2_awards
@@ -1443,7 +1485,7 @@ content:
   path: versions/v2/content/awards
   format: json
   filename:
-    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
+    template: '{year}{month}{day}-{entryKey}.json'
     field: create
   subfolders: false
   view:
@@ -1496,7 +1538,7 @@ content:
       multiple: true
       search: name,role
       value: '{path}'
-      label: '{name}'
+      label: '{fields.name}'
     description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
   - name: content
     label: 详细介绍与配图（可不填）
@@ -1577,6 +1619,12 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+  - name: entryKey
+    label: 系统记录标识
+    type: uuid
+    hidden: true
+    options:
+      editable: false
   exclude:
   - .gitkeep
 - name: v2_resources
@@ -1585,7 +1633,7 @@ content:
   path: versions/v2/content/resources
   format: json
   filename:
-    template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
+    template: '{year}{month}{day}-{entryKey}.json'
     field: create
   subfolders: false
   view:
@@ -1760,10 +1808,16 @@ content:
     options:
       min: 0
   - name: layoutDemo
-    label: 排版演示记录
+    label: 属于排版演示资料
     type: boolean
     default: false
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
+  - name: entryKey
+    label: 系统记录标识
+    type: uuid
+    hidden: true
+    options:
+      editable: false
   exclude:
   - .gitkeep
 - name: v2_admissions
