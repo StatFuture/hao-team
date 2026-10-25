@@ -8,5 +8,27 @@
   "demo": true,
   "published": true,
   "order": 0,
-  "layoutDemo": false
+  "layoutDemo": false,
+  "sections": [
+    {
+      "title": "个人简介",
+      "kind": "content",
+      "content": [
+        {
+          "type": "text",
+          "text": "<p>仅用于检验成员卡片和个人介绍页面，不代表真实团队成员。</p>"
+        }
+      ]
+    },
+    {
+      "title": "个人介绍",
+      "kind": "content",
+      "content": [
+        {
+          "type": "text",
+          "text": "<p>本资料为操作练习。用于检查姓名、身份、简介和详情页是否分别显示。练习完成后隐藏。</p>"
+        }
+      ]
+    }
+  ]
 }

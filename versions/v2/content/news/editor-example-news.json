@@ -1,0 +1,47 @@
+{
+  "title": "【操作示例】文字、图片、视频和附件混排练习",
+  "date": "2026-10-25",
+  "summary": "用于练习内容段的新增、上下移动和发布。所有文字均为填写提示，不代表真实活动。",
+  "pinned": false,
+  "published": true,
+  "order": 10,
+  "layoutDemo": true,
+  "content": [
+    {
+      "type": "text",
+      "heading": "",
+      "text": "<p>第一段：填写活动发生的时间、地点、参与人员以及主要内容。本条是操作练习，不是真实团队新闻。</p>"
+    },
+    {
+      "type": "image",
+      "image": "media/images/v2-carousel-trial-1.webp",
+      "caption": "图片一：校园试验图片，仅用于检查图片位置。"
+    },
+    {
+      "type": "text",
+      "heading": "活动过程",
+      "text": "<p>第二段：填写活动过程。这段应显示在第一张图片后、第二张图片前。</p><ul><li>文字可以加粗、添加小标题和列表。</li><li>每个内容段可以移动位置。</li></ul>"
+    },
+    {
+      "type": "image",
+      "image": "media/images/v2-carousel-trial-3.webp",
+      "caption": "图片二：另一张校园试验图片，保留原图比例。"
+    },
+    {
+      "type": "video",
+      "video": "media/videos/2.webm",
+      "poster": "media/images/file-2.png",
+      "caption": "两秒测试视频，仅用于验证播放与位置。"
+    },
+    {
+      "type": "text",
+      "heading": "",
+      "text": "<p>第三段：填写活动总结。这里的文字放在视频后面，也可以移动到视频前面。</p>"
+    },
+    {
+      "type": "file",
+      "file": "media/files/file.pdf",
+      "label": "操作练习附件.pdf"
+    }
+  ]
+}

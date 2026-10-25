@@ -1,0 +1,54 @@
+/* Reading layouts extend the existing university palette; homepage remains unchanged. */
+.member-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:38px;align-items:start}
+.member-sidebar{position:sticky;top:22px;border:1px solid #dce4ec;background:#fff}
+.member-sidebar details>summary{cursor:pointer;padding:16px 20px;color:var(--blue);font-weight:600;font-size:16px;border-bottom:1px solid #dce4ec}
+.member-sidebar-body>h2{margin:0;padding:19px 20px 15px;background:var(--blue);color:#fff;font-size:21px}
+.member-category-nav{display:block;background:white}
+.member-category-nav a{display:block;flex:none;text-align:left;padding:12px 20px;color:var(--ink);font-size:16px;border-bottom:1px solid #e3e9ef}
+.member-category-nav a:hover,.member-category-nav a[aria-current=page]{background:#eaf0f5;color:var(--blue);font-weight:600}
+.chapter-label{margin:21px 20px 7px;color:var(--muted);font-size:13px}
+.member-chapters{padding:0 10px 14px}
+.member-chapters button{display:block;width:100%;padding:9px 10px;background:transparent;text-align:left;color:var(--ink);font-size:14px;line-height:1.6}
+.member-chapters button:hover{background:var(--pale);color:var(--blue)}
+.teacher-article{width:100%;max-width:none;min-width:0;margin:0;padding:0}
+.teacher-article .member-detail-heading{display:grid;grid-template-columns:154px minmax(0,1fr);gap:29px;padding:0 0 29px;margin:0;border-bottom:1px solid #dce4ec;align-items:start}
+.teacher-article .member-detail-heading>img{width:154px;height:194px;object-fit:cover;object-position:center top;background:var(--pale)}
+.teacher-article .member-detail-heading h1{font-size:30px;line-height:1.4;margin:0 0 12px;color:var(--blue);overflow-wrap:anywhere}
+.member-facts{margin:15px 0 0;font-size:15px;line-height:1.8}
+.member-facts>div{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;margin:7px 0}
+.member-facts dt{color:var(--muted)}.member-facts dd{margin:0;overflow-wrap:anywhere}
+.member-chapter{padding-top:30px;margin:0 0 4px;scroll-margin-top:22px}
+.member-chapter>h2{margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid #dce4ec;font-size:21px;font-weight:600;color:var(--blue);line-height:1.5}
+.member-chapter>h2:focus{outline:none}
+.content-flow{font-size:16px;line-height:1.95;overflow-wrap:anywhere;min-width:0}
+.content-flow p{margin:0 0 18px;white-space:normal}
+.content-flow h2,.content-flow h3{margin:28px 0 14px;color:var(--blue);font-size:20px;line-height:1.6;font-weight:600}
+.content-flow h4{margin:23px 0 12px;font-size:17px}
+.content-flow ul,.content-flow ol{padding-left:1.65em;margin:12px 0 22px}.content-flow li+li{margin-top:6px}
+.content-flow a{color:#215c92;text-decoration:underline;text-underline-offset:3px}
+.content-flow blockquote{margin:22px 0;padding:12px 20px;border-left:3px solid #b6c9d9;background:#f5f8fa}
+.content-flow table{display:block;max-width:100%;overflow:auto;border-collapse:collapse;font-size:15px;margin:20px 0}
+.content-flow th,.content-flow td{border:1px solid #d9e2eb;padding:10px 14px;vertical-align:top;min-width:100px}.content-flow th{background:var(--pale)}
+.content-block{margin-bottom:22px;min-width:0}.content-block:last-child{margin-bottom:0}
+.content-flow figure,.legacy-media figure{margin:25px auto;max-width:680px;text-align:center}
+.content-flow figure.wide{max-width:100%}
+.content-flow img,.legacy-media figure img{width:auto;height:auto;max-width:100%;margin:0 auto;object-fit:contain}
+.content-flow figcaption{font-size:13px;color:var(--muted);margin-top:9px;line-height:1.7}
+.content-flow video,.legacy-media video{display:block;width:100%;max-width:760px;max-height:480px;margin:0 auto;background:#152c43;object-fit:contain}
+.content-flow .content-video{max-width:760px}
+.content-attachment a{display:flex;align-items:center;justify-content:space-between;gap:20px;border:1px solid #d7e1ea;background:#f5f8fb;padding:13px 17px;text-decoration:none;font-size:15px}
+.content-attachment a:hover{background:#eaf1f7}
+.reading-article{max-width:930px;margin:auto}.reading-article .article-heading h1{font-size:29px;line-height:1.55;margin:0 0 12px}
+.reading-article.news-article .article-heading{text-align:center;margin-bottom:30px}
+.reading-article .article-meta{font-size:14px;color:var(--muted);margin-bottom:0}
+.reading-article .article-lead{color:var(--muted)}
+.article-return{border-top:1px solid #dce4ec;margin:35px 0 0;padding-top:19px;font-size:14px}
+.records[data-kind=news] .record{background:#fff;border-bottom:1px solid #dce4ec;padding:24px 0;gap:24px;margin:0;box-shadow:none}
+.records[data-kind=news] .record h2{font-size:19px;line-height:1.65;margin-bottom:8px}
+.records[data-kind=news] .record p{font-size:14px;margin-bottom:8px}
+.records[data-kind=news] .record .cover{width:160px;height:104px;object-fit:cover;align-self:start}
+.records[data-kind=news] .record.with-cover{grid-template-columns:160px minmax(0,1fr)}
+.pinned-badge{display:inline-block;font-size:12px;vertical-align:2px;padding:1px 7px;margin-right:9px;background:#e8eff5;color:var(--blue);font-weight:500}
+@media(max-width:900px){.member-layout{grid-template-columns:180px minmax(0,1fr);gap:25px}.teacher-article .member-detail-heading{grid-template-columns:125px minmax(0,1fr);gap:20px}.teacher-article .member-detail-heading>img{width:125px;height:165px}.member-facts>div{grid-template-columns:64px minmax(0,1fr);gap:6px}}
+@media(max-width:760px){.member-layout{display:block}.member-sidebar{position:static;margin-bottom:27px}.member-sidebar-body>h2{display:none}.member-category-nav{display:flex}.member-category-nav a{flex:1;text-align:center}.member-sidebar details:not([open])>summary{border-bottom:0}.member-chapters{display:flex;flex-wrap:wrap;gap:3px 8px;padding:0 15px 15px}.member-chapters button{width:auto}.chapter-label{margin-top:15px}.teacher-article .member-detail-heading{grid-template-columns:104px minmax(0,1fr);gap:19px}.teacher-article .member-detail-heading>img{width:104px;height:139px}.teacher-article .member-detail-heading h1{font-size:25px}.member-facts{font-size:14px}.member-chapter{padding-top:26px}.member-chapter>h2{font-size:20px}.content-flow{font-size:15px;line-height:1.95}.reading-article .article-heading h1{font-size:24px}.content-flow video,.legacy-media video{max-height:300px}.records[data-kind=news] .record.with-cover{grid-template-columns:100px minmax(0,1fr);gap:15px}.records[data-kind=news] .record .cover{width:100px;height:76px}.records[data-kind=news] .record h2{font-size:17px}.records[data-kind=news] .record{padding:20px 0}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

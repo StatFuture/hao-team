@@ -9,6 +9,8 @@ class VersionTwoTests(unittest.TestCase):
         self.root = Path(self.temp.name) / 'project'
         shutil.copytree(ROOT, self.root, ignore=shutil.ignore_patterns('_site', '__pycache__', '.git'))
         self.v2 = self.root / 'versions/v2'
+        for name in ('lab.json','admissions.json'):
+            (self.v2/'data'/name).unlink(missing_ok=True)
         # Tests operate on controlled fixtures, never assume the editor's lists are empty.
         for folder in [self.root / 'content', self.v2 / 'content']:
             for record in folder.rglob('*.json'):
