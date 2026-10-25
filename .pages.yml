@@ -149,6 +149,16 @@ content:
     type: boolean
     description: 仅用于查看排版；不是实际成员或新闻。有真实新闻后自动显示真实内容。
     default: false
+  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  actions:
+  - name: build-draft-preview
+    label: 生成已保存草稿预览
+    workflow: pages.yml
+    ref: main
+    confirm: &id001
+      title: 生成草稿预览
+      message: 请先在 drafts 草稿工作区保存。未保存的表单不会进入预览。生成完成后打开 https://statfuture.github.io/hao-team/preview/ 。此操作不发布正式内容。
+      button: 生成预览
 - name: v2_lab
   label: 实验室简介
   type: file
@@ -238,12 +248,19 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
-  - &id001
+  - &id002
     name: layoutDemo
     label: 属于排版演示资料
     type: boolean
     default: false
     description: 目前练习期间保留；关闭网站演示开关后，这些记录不会显示。真实资料保持关闭。
+  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  actions:
+  - name: build-draft-preview
+    label: 生成已保存草稿预览
+    workflow: pages.yml
+    ref: main
+    confirm: *id001
 - name: v2_news
   label: 团队新闻
   type: collection
@@ -449,6 +466,14 @@ content:
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
   exclude:
   - .gitkeep
+  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  actions:
+  - name: build-draft-preview
+    label: 生成已保存草稿预览
+    workflow: pages.yml
+    ref: main
+    confirm: *id001
+    scope: entry
 - name: v2_members
   label: 团队成员
   type: collection
@@ -679,6 +704,14 @@ content:
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
   exclude:
   - .gitkeep
+  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  actions:
+  - name: build-draft-preview
+    label: 生成已保存草稿预览
+    workflow: pages.yml
+    ref: main
+    confirm: *id001
+    scope: entry
 - name: v2_directions
   label: 研究方向
   type: collection
@@ -786,7 +819,7 @@ content:
     options:
       min: 0
     description: 一般填10、20、30，需要插在中间可以填15。
-  - *id001
+  - *id002
   filename:
     template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
     field: create
@@ -805,6 +838,14 @@ content:
     default:
       sort: order
       order: asc
+  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  actions:
+  - name: build-draft-preview
+    label: 生成已保存草稿预览
+    workflow: pages.yml
+    ref: main
+    confirm: *id001
+    scope: entry
 - name: v2_projects
   label: 科研项目
   type: collection
@@ -961,6 +1002,14 @@ content:
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
   exclude:
   - .gitkeep
+  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  actions:
+  - name: build-draft-preview
+    label: 生成已保存草稿预览
+    workflow: pages.yml
+    ref: main
+    confirm: *id001
+    scope: entry
 - name: v2_papers
   label: 学术论文
   type: collection
@@ -1126,6 +1175,14 @@ content:
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
   exclude:
   - .gitkeep
+  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  actions:
+  - name: build-draft-preview
+    label: 生成已保存草稿预览
+    workflow: pages.yml
+    ref: main
+    confirm: *id001
+    scope: entry
 - name: v2_patents
   label: 专利
   type: collection
@@ -1277,6 +1334,14 @@ content:
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
   exclude:
   - .gitkeep
+  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  actions:
+  - name: build-draft-preview
+    label: 生成已保存草稿预览
+    workflow: pages.yml
+    ref: main
+    confirm: *id001
+    scope: entry
 - name: v2_books
   label: 著作与教材
   type: collection
@@ -1437,6 +1502,14 @@ content:
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
   exclude:
   - .gitkeep
+  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  actions:
+  - name: build-draft-preview
+    label: 生成已保存草稿预览
+    workflow: pages.yml
+    ref: main
+    confirm: *id001
+    scope: entry
 - name: v2_awards
   label: 荣誉奖励
   type: collection
@@ -1579,6 +1652,14 @@ content:
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
   exclude:
   - .gitkeep
+  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  actions:
+  - name: build-draft-preview
+    label: 生成已保存草稿预览
+    workflow: pages.yml
+    ref: main
+    confirm: *id001
+    scope: entry
 - name: v2_resources
   label: 学术资源
   type: collection
@@ -1766,6 +1847,14 @@ content:
     description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
   exclude:
   - .gitkeep
+  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  actions:
+  - name: build-draft-preview
+    label: 生成已保存草稿预览
+    workflow: pages.yml
+    ref: main
+    confirm: *id001
+    scope: entry
 - name: v2_admissions
   label: 招生信息
   type: file
@@ -1882,4 +1971,28 @@ content:
   - name: note
     label: 补充说明
     type: text
-  - *id001
+  - *id002
+  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  actions:
+  - name: build-draft-preview
+    label: 生成已保存草稿预览
+    workflow: pages.yml
+    ref: main
+    confirm: *id001
+actions:
+- name: build-draft-preview
+  label: 生成已保存草稿预览
+  workflow: pages.yml
+  ref: main
+  confirm: *id001
+- name: publish-reviewed-drafts
+  label: 发布正式网站
+  workflow: publish-drafts.yml
+  ref: main
+  confirm:
+    title: 发布全部已保存草稿？
+    message: 此操作会把 drafts 中全部已保存的修改发布到正式网站，包括其他维护人的草稿。请先查看预览，并确认大家的资料都可以公开。预览尚未更新时会阻止发布。
+    button: 确认发布全部草稿
+settings:
+  content:
+    merge: true

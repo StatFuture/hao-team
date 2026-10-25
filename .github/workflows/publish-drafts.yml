@@ -1,0 +1,30 @@
+name: Publish reviewed drafts to the formal team site
+on:
+  workflow_dispatch:
+    inputs:
+      payload:
+        description: Pages CMS action context
+        required: true
+        type: string
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: publish-reviewed-drafts
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify preview version and merge saved drafts
+        env:
+          CMS_PAYLOAD: ${{ inputs.payload }}
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/publish_drafts.py

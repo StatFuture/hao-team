@@ -1,8 +1,13 @@
-name: Build and publish standalone version 2
+name: Build formal site and draft preview
 on:
   push:
-    branches: [main]
+    branches: [main, drafts]
   workflow_dispatch:
+    inputs:
+      payload:
+        description: Pages CMS action context (optional)
+        required: false
+        type: string
 permissions:
   contents: read
   pages: write
@@ -15,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -22,7 +29,35 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python scripts/test_v2.py
       - run: python scripts/test_content_blocks.py
+      - run: python scripts/test_preview.py
+      - run: python scripts/test_publish_drafts.py
       - run: python scripts/build_standalone.py
+      - name: Record exact production version and resolve draft branch
+        id: versions
+        shell: bash
+        run: |
+          echo "main=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          if git ls-remote --exit-code --heads origin drafts >/dev/null; then
+            echo 'draft_ref=drafts' >> "$GITHUB_OUTPUT"
+          else
+            echo 'draft_ref=main' >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.versions.outputs.draft_ref }}
+          path: .draft-worktree
+          persist-credentials: false
+      - name: Build saved drafts with the real website renderer
+        working-directory: .draft-worktree
+        run: python scripts/build_standalone.py
+      - name: Assemble preview separately from formal content
+        env:
+          MAIN_SHA: ${{ steps.versions.outputs.main }}
+        run: |
+          python scripts/preview_site.py --production _site --draft .draft-worktree/_site --draft-sha "$(git -C .draft-worktree rev-parse HEAD)" --main-sha "$MAIN_SHA" --run-id "$GITHUB_RUN_ID"
+          echo '## 草稿预览' >> "$GITHUB_STEP_SUMMARY"
+          echo '[打开预览（电脑 / 手机）](https://statfuture.github.io/hao-team/preview/)' >> "$GITHUB_STEP_SUMMARY"
+          echo '正式网页的数据仍来自 main；预览的数据来自 drafts。' >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
