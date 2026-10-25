@@ -1,0 +1,22 @@
+{
+  "published": true,
+  "order": 70,
+  "layoutDemo": true,
+  "title": "【演示项目 07】数据处理与实验方法比较",
+  "researchArea": "光学感知与成像方法（演示方向）",
+  "contributors": "演示教师 07、演示学生 07",
+  "fields": [
+    {
+      "label": "项目性质",
+      "value": "仅为排版测试，不代表真实立项或经费"
+    },
+    {
+      "label": "演示编号",
+      "value": "DEMO-PROJECT-007"
+    },
+    {
+      "label": "说明",
+      "value": "用于检查项目详细信息较多时的字段换行与阅读效果。用于检查项目详细信息较多时的字段换行与阅读效果。"
+    }
+  ]
+}

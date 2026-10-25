@@ -1,0 +1,13 @@
+{
+  "published": true,
+  "order": 40,
+  "layoutDemo": true,
+  "name": "演示教师 04",
+  "type": "teacher",
+  "role": "教师（演示）",
+  "demo": true,
+  "photo": "media/images/team-demo-avatar-1.png",
+  "bio": "本方向仅用于测试研究介绍和相关项目的排版。演示文字围绕成像过程、观测误差和信息提取组织，不代表学校或任何教师的真实研究计划。",
+  "body": "此人为演示成员，不对应任何真实教师或学生。\n\n这里可以填写经本人确认的研究经历、学习背景和公开介绍。本段重复展开，用于测试详细个人信息较多时的段落排版。",
+  "email": "demo-member-4@example.org"
+}

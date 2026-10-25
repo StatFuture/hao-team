@@ -1,0 +1,9 @@
+{
+  "published": true,
+  "order": 80,
+  "layoutDemo": true,
+  "title": "【演示资源 08】科研数据与方法说明文档的长名称显示效果测试",
+  "body": "此条只有演示说明，没有真实附件；用于检查资源列表、详情和分页。\n正式资料到位后由维护人员替换。",
+  "target": "resources",
+  "position": "after"
+}

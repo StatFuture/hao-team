@@ -1,0 +1,19 @@
+{
+  "published": true,
+  "order": 30,
+  "layoutDemo": true,
+  "title": "【演示著作 03】科研方法与资料整理示例",
+  "fields": [
+    {
+      "label": "性质",
+      "value": "排版测试，不是真实出版物"
+    },
+    {
+      "label": "说明",
+      "value": "用于检查不同类型代表成果的展示。"
+    }
+  ],
+  "researchArea": "数据分析与科研计算（演示方向）",
+  "contributors": "演示成员",
+  "representative": true
+}
