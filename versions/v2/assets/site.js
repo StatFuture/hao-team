@@ -73,14 +73,29 @@ let navigationHoverTimer=null;
 const desktopHoverNavigation=window.matchMedia('(hover: hover) and (pointer: fine)');
 const usesDesktopNavigation=()=>desktopHoverNavigation.matches&&document.querySelector('.menu-toggle').getClientRects().length===0;
 function cancelNavigationHover(){clearTimeout(navigationHoverTimer);navigationHoverTimer=null;}
+const sectionRoutes=new Map(),routePositions=new Map();
+let visibleRoute=location.hash||'#/home',routeRestoreTicket=0;
+const sectionOf=hash=>{let key;try{key=decodeURIComponent(String(hash||'#/home').replace(/^#\//,'').split(/[/?]/)[0]);}catch{return '';}return Object.hasOwn(labels,key)?key:'';};
+function rememberVisibleRoute(){const key=sectionOf(visibleRoute);if(!key)return;sectionRoutes.set(key,visibleRoute);routePositions.set(visibleRoute,scrollY);}
+function switchRememberedSection(hash){
+ cancelNavigationHover();const key=sectionOf(hash);if(!key||key===sectionOf(visibleRoute))return;
+ rememberVisibleRoute();const target=sectionRoutes.get(key)||'#/'+key;if(location.hash!==target)location.hash=target;
+}
+function renderRememberedRoute(initial=false){
+ if(!initial)rememberVisibleRoute();
+ const next=location.hash||'#/home',key=sectionOf(next),y=routePositions.get(next)||0,ticket=++routeRestoreTicket;
+ render();visibleRoute=next;if(key)sectionRoutes.set(key,next);main.focus({preventScroll:true});
+ requestAnimationFrame(()=>{if(ticket!==routeRestoreTicket)return;window.scrollTo({top:y,behavior:'instant'});requestAnimationFrame(()=>{if(ticket===routeRestoreTicket)window.scrollTo({top:y,behavior:'instant'});});});
+}
 for(const link of document.querySelectorAll('#navigation a')){
  link.addEventListener('pointerenter',event=>{
   cancelNavigationHover();
   if(event.pointerType!=='mouse'||!usesDesktopNavigation())return;
-  navigationHoverTimer=setTimeout(()=>{navigationHoverTimer=null;if(usesDesktopNavigation()&&link.matches(':hover')&&location.hash!==link.hash)location.hash=link.hash;},160);
+  navigationHoverTimer=setTimeout(()=>{navigationHoverTimer=null;if(usesDesktopNavigation()&&link.matches(':hover'))switchRememberedSection(link.hash);},160);
  });
  link.addEventListener('pointerleave',cancelNavigationHover);
  link.addEventListener('pointerdown',cancelNavigationHover);
+ link.addEventListener('click',event=>{if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();switchRememberedSection(link.hash);});
 }
 window.addEventListener('hashchange',cancelNavigationHover);
 window.addEventListener('blur',cancelNavigationHover);
@@ -88,5 +103,6 @@ window.addEventListener('resize',cancelNavigationHover);
 desktopHoverNavigation.addEventListener('change',cancelNavigationHover);
 document.querySelector('.skip').addEventListener('click',e=>{e.preventDefault();main.focus();main.scrollIntoView();});
 const {plainParagraphs,recordBody,renderMemberDetail,renderRecordDetail}=createReadingRenderer({esc,media,get,kinds,labels,shell,currentQuery,returnQuery,title,members,pageNumber,pageSize,isStudent,P,S,memberPhoto,emailLink,ext,demoBadge,list,fields,empty});
-window.addEventListener('hashchange',()=>{render();main.focus({preventScroll:true})});render();
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+window.addEventListener('hashchange',()=>renderRememberedRoute());renderRememberedRoute(true);
 })();
