@@ -1,0 +1,71 @@
+{
+  "name": "【练习】测试教师丙",
+  "role": "操作测试人员",
+  "type": "teacher",
+  "researchFocus": "仅用于检查资料更新功能\n",
+  "bio": "这是练习记录，不是真实教师资料。",
+  "sections": [
+    {
+      "title": "个人简介",
+      "kind": "content",
+      "content": [
+        {
+          "type": "text",
+          "text": "<p>这是个人简介练习，不是真实教师资料。</p>"
+        },
+        {
+          "type": "image",
+          "image": "media/images/file-1.webp",
+          "caption": "它不是人物照片",
+          "width": "standard"
+        }
+      ]
+    },
+    {
+      "title": "教育背景",
+      "kind": "content",
+      "content": [
+        {
+          "type": "text",
+          "text": "<p>这里只是格式练习，没有真实教育经历。</p>"
+        }
+      ]
+    },
+    {
+      "title": "工作经历",
+      "kind": "content",
+      "content": [
+        {
+          "type": "text",
+          "text": "<p></p>"
+        }
+      ]
+    },
+    {
+      "title": "科研项目",
+      "kind": "projects"
+    },
+    {
+      "title": "代表性学术论文",
+      "kind": "papers"
+    },
+    {
+      "title": "荣誉奖励",
+      "kind": "awards"
+    },
+    {
+      "title": "教学与招生",
+      "kind": "content",
+      "content": [
+        {
+          "type": "text",
+          "text": "<p></p>"
+        }
+      ]
+    }
+  ],
+  "demo": true,
+  "published": true,
+  "order": 9900,
+  "layoutDemo": false
+}
