@@ -21,7 +21,7 @@ class ContentTests(unittest.TestCase):
         self.assertIn('First file',doc.get_text());self.assertIn('Second file',doc.get_text())
         self.assertEqual(doc.select_one('video')['preload'],'none')
     def test_attachment_description_is_optional_plain_text(self):
-        html,_=compile_blocks([{'type':'file','file':'media/a.pdf','label':'Guide','description':'Read this first\\n<script>alert(1)</script>'}],self.asset)
+        html,_=compile_blocks([{'type':'file','file':'media/a.pdf','label':'Guide','description':'Read this first\n<script>alert(1)</script>'}],self.asset)
         doc=BeautifulSoup(html,'html.parser')
         self.assertEqual(doc.select_one('.content-attachment a')['href'],'media/a.pdf')
         self.assertIn('Read this first',doc.select_one('.attachment-description').get_text())
