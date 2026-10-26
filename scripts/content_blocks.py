@@ -86,6 +86,11 @@ def compile_blocks(blocks, asset):
             url=asset(block['file'])
             label=str(block.get('label') or PurePosixPath(urlsplit(url).path).name or '查看资料')
             html='<p class="content-attachment"><a href="'+escape(url,quote=True)+'" target="_blank" rel="noopener noreferrer"><span>'+escape(label)+'</span><span aria-hidden="true">↗</span></a></p>'
+            description=block.get('description') or ''
+            if not isinstance(description,str):raise ValueError('附件说明必须是文字')
+            description=description.strip()
+            if description:
+                html='<div class="content-attachment-group">'+html+'<p class="attachment-description">'+escape(description).replace('\n','<br>')+'</p></div>'
         else:
             raise ValueError('未知正文段类型：'+str(kind))
         output.append('<div class="content-block" data-block-type="'+kind+'">'+html+'</div>')
