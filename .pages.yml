@@ -250,6 +250,10 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+      - name: description
+        label: 附件说明（可不填）
+        type: text
+        description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   - &id002
     name: layoutDemo
     label: 属于排版演示资料
@@ -403,6 +407,10 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+      - name: description
+        label: 附件说明（可不填）
+        type: text
+        description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   - name: body
     label: 正文
     type: text
@@ -526,6 +534,7 @@ content:
     type: image
     options:
       media: images
+    description: 留空时，成员列表和个人详情页自动显示蓝灰色人形占位图，不代表真人；后台上传框仍为空，不用另选默认图片。上传本人照片并保存后，会替换占位图。
   - name: mentor
     label: 导师身份（学生可不填）
     type: string
@@ -678,6 +687,10 @@ content:
           label: 页面上显示的附件名称
           type: string
           description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+        - name: description
+          label: 附件说明（可不填）
+          type: text
+          description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   - name: body
     label: 详细个人介绍
     type: text
@@ -815,6 +828,10 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+      - name: description
+        label: 附件说明（可不填）
+        type: text
+        description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   - name: published
     label: 在网站显示
     type: boolean
@@ -1010,6 +1027,10 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+      - name: description
+        label: 附件说明（可不填）
+        type: text
+        description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   exclude:
   - .gitkeep
   description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
@@ -1185,6 +1206,10 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+      - name: description
+        label: 附件说明（可不填）
+        type: text
+        description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   exclude:
   - .gitkeep
   description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
@@ -1346,6 +1371,10 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+      - name: description
+        label: 附件说明（可不填）
+        type: text
+        description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   exclude:
   - .gitkeep
   description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
@@ -1516,6 +1545,10 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+      - name: description
+        label: 附件说明（可不填）
+        type: text
+        description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   exclude:
   - .gitkeep
   description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
@@ -1668,6 +1701,10 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+      - name: description
+        label: 附件说明（可不填）
+        type: text
+        description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   exclude:
   - .gitkeep
   description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
@@ -1785,6 +1822,10 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+      - name: description
+        label: 附件说明（可不填）
+        type: text
+        description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   - name: body
     label: 说明
     type: text
@@ -1965,6 +2006,10 @@ content:
         label: 页面上显示的附件名称
         type: string
         description: 例如：2026年招生申请材料.pdf。留空时显示实际文件名。
+      - name: description
+        label: 附件说明（可不填）
+        type: text
+        description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   - name: contacts
     label: 招生联系人
     type: object

@@ -20,6 +20,20 @@ class ContentTests(unittest.TestCase):
         self.assertEqual([n['data-block-type'] for n in doc.select('.content-block')],['text','image','text','video','file','file'])
         self.assertIn('First file',doc.get_text());self.assertIn('Second file',doc.get_text())
         self.assertEqual(doc.select_one('video')['preload'],'none')
+    def test_attachment_description_is_optional_plain_text(self):
+        html,_=compile_blocks([{'type':'file','file':'media/a.pdf','label':'Guide','description':'Read this first\\n<script>alert(1)</script>'}],self.asset)
+        doc=BeautifulSoup(html,'html.parser')
+        self.assertEqual(doc.select_one('.content-attachment a')['href'],'media/a.pdf')
+        self.assertIn('Read this first',doc.select_one('.attachment-description').get_text())
+        self.assertIsNone(doc.find('script'))
+        self.assertIsNotNone(doc.select_one('.attachment-description br'))
+        self.assertEqual(doc.select_one('.attachment-description').find_previous('a').get_text(strip=True),'Guide↗')
+        old,_=compile_blocks([{'type':'file','file':'media/a.pdf'}],self.asset)
+        self.assertNotIn('attachment-description',old)
+        blank,_=compile_blocks([{'type':'file','file':'media/a.pdf','description':'  '}],self.asset)
+        self.assertNotIn('attachment-description',blank)
+        with self.assertRaises(ValueError):
+            compile_blocks([{'type':'file','file':'media/a.pdf','description':{'invalid':True}}],self.asset)
     def test_script_events_and_arbitrary_styles_are_removed(self):
         html=rich_html('<script>alert(1)</script><p onclick="x()" style="font-size:99px">Safe<img src="/media/a.png" onerror="x()"></p>',self.asset)
         self.assertNotIn('<script',html);self.assertNotIn('onclick',html);self.assertNotIn('onerror',html);self.assertNotIn('99px',html)
