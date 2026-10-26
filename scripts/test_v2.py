@@ -192,4 +192,45 @@ class VersionTwoTests(unittest.TestCase):
         self.assertEqual(record['target'],'resources')
         self.assertNotIn('position',record)
 
+    def test_normal_dates_ignore_manual_sequence_and_unknown_goes_last(self):
+        for ident,fields in [('new',{'date':'2026-10-26','order':99}),
+                             ('old',{'date':'2025-01-01','order':1}),
+                             ('unknown',{'order':0})]:
+            self.write('versions/v2/content/resources/'+ident+'.json',dict(title=ident,published=True,**fields))
+        self.assertEqual([v['title'] for v in self.data()['collections']['resources']],['new','old','unknown'])
+
+    def test_pins_use_sequence_before_date(self):
+        records=[('normal',{'date':'2026-10-26'}),('first',{'date':'2010-01-01','pinned':True,'order':1}),
+                 ('second',{'date':'2025-01-01','pinned':True,'order':2}),
+                 ('zero',{'date':'2000-01-01','pinned':True,'order':0})]
+        for ident,fields in records:self.write('versions/v2/content/projects/'+ident+'.json',dict(title=ident,published=True,**fields))
+        rows=[x for x in self.data()['collections']['projects'] if x['id'].startswith('team-')]
+        self.assertEqual([x['title'] for x in rows],['zero','first','second','normal'])
+
+    def test_paper_year_and_personal_list_have_same_priority(self):
+        for ident,fields in [('new',{'year':2026,'order':99}),('old',{'year':2024,'order':1}),
+                             ('pinned',{'year':2010,'pinned':True,'order':2}),('unknown',{})]:
+            self.write('versions/v2/content/papers/'+ident+'.json',dict(title=ident,published=True,**fields))
+        rows=self.data()['collections']['papers']
+        self.assertEqual([x['title'] for x in rows],['pinned','new','old','unknown'])
+        self.assertEqual(rows[1]['sortDate'],20260000)
+
+    def test_member_sequence_still_uses_one_two_three(self):
+        for ident,order in [('third',3),('first',1),('second',2)]:
+            self.write('versions/v2/content/members/'+ident+'.json',{'name':ident,'published':True,'order':order})
+        self.assertEqual([x['name'] for x in self.data()['collections']['members']],['first','second','third'])
+
+    def test_invalid_calendar_date_rejected(self):
+        self.write('versions/v2/content/resources/invalid.json',{'title':'Invalid','published':True,'date':'2026-02-30'})
+        with self.assertRaises(ValueError):self.data()
+
+    def test_draft_save_has_no_automatic_preview_workflow(self):
+        import re
+        self.assertFalse((self.root/'.github/workflows/draft-preview.yml').exists())
+        for p in (self.root/'.github/workflows').glob('*.yml'):
+            match=re.search(r'(?ms)^on:\n(.*?)(?=^\S|\Z)',p.read_text(encoding='utf8'))
+            trigger=match.group(1) if match else ''
+            self.assertNotRegex(trigger,r'branches:\s*\[[^\]]*\bdrafts\b')
+
 if __name__ == '__main__': unittest.main()
+

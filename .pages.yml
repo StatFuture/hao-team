@@ -102,6 +102,7 @@ content:
     - name: order
       label: 排列序号
       type: number
+      description: 数字小的先播放，填1、2、3即可。
     - name: published
       label: 显示
       type: boolean
@@ -260,6 +261,7 @@ content:
     sort:
     - date
     - pinned
+    - order
     - title
     default:
       sort: date
@@ -442,7 +444,7 @@ content:
   - name: order
     label: 置顶新闻之间的序号
     type: number
-    description: 数字越小越靠前，例如10排在20前。普通新闻只按日期排序，此处仅排列置顶新闻。
+    description: 只对开启置顶的内容生效，数字小的靠前，填1、2、3即可。普通内容不必填，自动按日期或年份从新到旧。
     options:
       min: 0
   exclude:
@@ -563,7 +565,7 @@ content:
       type: string
       required: true
     - name: kind
-      label: 这一部分怎样填写
+      label: 介绍内容的填写方式
       type: select
       options:
         values:
@@ -580,7 +582,7 @@ content:
         - name: awards
           label: 自动显示此人的荣誉奖励
       default: content
-      description: 自己写介绍就选“在下面填写”；需要自动汇总已录入成果时，选择对应类型。须先在相应成果里选择这位成员。
+      description: 选“在下面填写文字、图片等”，就自己写这一章；选“自动显示此人的学术论文”等，网站就列出在相应成果库中关联了此人的资料，不用复制。仅在姓名文字里写人名不会建立关联。
     - name: content
       label: 这一部分的介绍内容（选自动显示时不用填）
       type: block
@@ -684,7 +686,7 @@ content:
   - name: order
     label: 排列序号
     type: number
-    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
+    description: 数字小的排在前面，填1、2、3即可。
     options:
       min: 0
   exclude:
@@ -807,10 +809,9 @@ content:
   - name: order
     label: 排列序号（越小越靠前）
     type: number
-    default: 10
     options:
       min: 0
-    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
+    description: 数字小的排在前面，填1、2、3即可。
   filename:
     template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
     field: create
@@ -850,20 +851,29 @@ content:
   view:
     fields:
     - title
+    - date
+    - pinned
     - published
-    - order
     primary: title
     sort:
+    - date
+    - pinned
     - order
     - title
     default:
-      sort: order
-      order: asc
+      sort: date
+      order: desc
   fields:
   - name: title
     label: 项目名称
     type: string
     required: true
+  - name: date
+    label: 日期（用于排序，可不填）
+    type: date
+    options:
+      format: yyyy-MM-dd
+    description: 填写项目开始日期。普通条目按日期从新到旧；未知可留空，放在有日期的条目后。
   - name: fields
     label: 详细信息（每项分别填写）
     type: object
@@ -891,14 +901,19 @@ content:
       type: text
       description: 填写这一项的实际内容；不知道可留空。
     description: 点开每一项填写内容；点 Add an item 可增加一项。每项分开显示，不用把所有资料挤在同一个框里。
+  - name: pinned
+    label: 置顶（优先于日期）
+    type: boolean
+    default: false
+    description: 需要排在普通条目前面才开启；多个置顶内容可在下面用1、2、3排列。
   - name: published
     label: 在网站显示
     type: boolean
     description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
   - name: order
-    label: 排列序号
+    label: 置顶内容之间的序号（可不填）
     type: number
-    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
+    description: 只对开启置顶的内容生效，数字小的靠前，填1、2、3即可。普通内容不必填，自动按日期或年份从新到旧。
     options:
       min: 0
   - name: researchArea
@@ -912,7 +927,7 @@ content:
   - name: contributors
     label: 成员署名补充（可留空）
     type: string
-    description: 下方选过关联成员后，网页会自动显示这些姓名，不必重复填写。需完整作者顺序或补充校外合作者时，才在这里写完整署名；填写后以此为准。
+    description: 不填时自动显示下方所选关联成员的姓名。需要显示论文原文的全部作者及先后顺序、或加入外校作者时，在这里写完整名单；填写后整行以这里为准，不能只写新增的一人。
   - name: memberRefs
     label: 关联成员（选择已录入的教师或学生）
     type: reference
@@ -922,7 +937,7 @@ content:
       search: name,role
       value: '{path}'
       label: '{fields.name}'
-    description: 先在“团队成员”新增并保存，再选择参与此成果的人，可多选。用于自动显示姓名及在其个人页汇总成果；完整作者名单仍应写入论文引文或成果详情。
+    description: 选择已录入的参与者，可多选，表示这条成果属于谁，用于各人个人页自动收集成果。这里不表示第一作者或通讯作者；作者先后顺序以论文原文和完整引文为准。
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
@@ -1031,15 +1046,18 @@ content:
   view:
     fields:
     - title
+    - year
+    - pinned
     - published
-    - order
     primary: title
     sort:
+    - year
+    - pinned
     - order
     - title
     default:
-      sort: order
-      order: asc
+      sort: year
+      order: desc
   fields:
   - name: title
     label: 论文题目
@@ -1056,21 +1074,26 @@ content:
     options:
       min: 1900
       max: 2200
-    description: 填写四位年份，例如2026；有年份的论文优先按年份从新到旧显示。
+    description: 填写论文发表年份。普通论文按年份从新到旧；未知可留空，放在有年份的论文后。作者先后顺序请按原文填写在完整引文里。
   - name: doi
     label: DOI
     type: string
   - name: link
     label: 论文网址
     type: string
+  - name: pinned
+    label: 置顶（优先于日期）
+    type: boolean
+    default: false
+    description: 需要排在普通条目前面才开启；多个置顶内容可在下面用1、2、3排列。
   - name: published
     label: 在网站显示
     type: boolean
     description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
   - name: order
-    label: 排列序号
+    label: 置顶内容之间的序号（可不填）
     type: number
-    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
+    description: 只对开启置顶的内容生效，数字小的靠前，填1、2、3即可。普通内容不必填，自动按日期或年份从新到旧。
     options:
       min: 0
   - name: researchArea
@@ -1084,7 +1107,7 @@ content:
   - name: contributors
     label: 成员署名补充（可留空）
     type: string
-    description: 下方选过关联成员后，网页会自动显示这些姓名，不必重复填写。需完整作者顺序或补充校外合作者时，才在这里写完整署名；填写后以此为准。
+    description: 不填时自动显示下方所选关联成员的姓名。需要显示论文原文的全部作者及先后顺序、或加入外校作者时，在这里写完整名单；填写后整行以这里为准，不能只写新增的一人。
   - name: representative
     label: 同时展示在研究方向的代表成果中
     type: boolean
@@ -1099,7 +1122,7 @@ content:
       search: name,role
       value: '{path}'
       label: '{fields.name}'
-    description: 先在“团队成员”新增并保存，再选择参与此成果的人，可多选。用于自动显示姓名及在其个人页汇总成果；完整作者名单仍应写入论文引文或成果详情。
+    description: 选择已录入的参与者，可多选，表示这条成果属于谁，用于各人个人页自动收集成果。这里不表示第一作者或通讯作者；作者先后顺序以论文原文和完整引文为准。
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
@@ -1208,20 +1231,29 @@ content:
   view:
     fields:
     - title
+    - date
+    - pinned
     - published
-    - order
     primary: title
     sort:
+    - date
+    - pinned
     - order
     - title
     default:
-      sort: order
-      order: asc
+      sort: date
+      order: desc
   fields:
   - name: title
     label: 专利名称
     type: string
     required: true
+  - name: date
+    label: 日期（用于排序，可不填）
+    type: date
+    options:
+      format: yyyy-MM-dd
+    description: 填写申请或授权日期，与这条专利的实际状态一致。普通条目按日期从新到旧；未知可留空，放在有日期的条目后。
   - name: fields
     label: 详细信息（每项分别填写）
     type: object
@@ -1249,14 +1281,19 @@ content:
       label: 填写内容
       type: text
       description: 填写这一项的实际内容；不知道可留空。
+  - name: pinned
+    label: 置顶（优先于日期）
+    type: boolean
+    default: false
+    description: 需要排在普通条目前面才开启；多个置顶内容可在下面用1、2、3排列。
   - name: published
     label: 在网站显示
     type: boolean
     description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
   - name: order
-    label: 排列序号
+    label: 置顶内容之间的序号（可不填）
     type: number
-    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
+    description: 只对开启置顶的内容生效，数字小的靠前，填1、2、3即可。普通内容不必填，自动按日期或年份从新到旧。
     options:
       min: 0
   - name: researchArea
@@ -1270,7 +1307,7 @@ content:
   - name: contributors
     label: 成员署名补充（可留空）
     type: string
-    description: 下方选过关联成员后，网页会自动显示这些姓名，不必重复填写。需完整作者顺序或补充校外合作者时，才在这里写完整署名；填写后以此为准。
+    description: 不填时自动显示下方所选关联成员的姓名。需要显示论文原文的全部作者及先后顺序、或加入外校作者时，在这里写完整名单；填写后整行以这里为准，不能只写新增的一人。
   - name: representative
     label: 同时展示在研究方向的代表成果中
     type: boolean
@@ -1285,7 +1322,7 @@ content:
       search: name,role
       value: '{path}'
       label: '{fields.name}'
-    description: 先在“团队成员”新增并保存，再选择参与此成果的人，可多选。用于自动显示姓名及在其个人页汇总成果；完整作者名单仍应写入论文引文或成果详情。
+    description: 选择已录入的参与者，可多选，表示这条成果属于谁，用于各人个人页自动收集成果。这里不表示第一作者或通讯作者；作者先后顺序以论文原文和完整引文为准。
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
@@ -1394,20 +1431,29 @@ content:
   view:
     fields:
     - title
+    - date
+    - pinned
     - published
-    - order
     primary: title
     sort:
+    - date
+    - pinned
     - order
     - title
     default:
-      sort: order
-      order: asc
+      sort: date
+      order: desc
   fields:
   - name: title
     label: 书名或教材名称
     type: string
     required: true
+  - name: date
+    label: 日期（用于排序，可不填）
+    type: date
+    options:
+      format: yyyy-MM-dd
+    description: 填写出版日期。普通条目按日期从新到旧；未知可留空，放在有日期的条目后。
   - name: fields
     label: 详细信息（每项分别填写）
     type: object
@@ -1433,14 +1479,19 @@ content:
       type: text
       description: 填写这一项的实际内容；不知道可留空。
     description: 点开每一项填写内容；点 Add an item 可增加一项。每项分开显示，不用把所有资料挤在同一个框里。
+  - name: pinned
+    label: 置顶（优先于日期）
+    type: boolean
+    default: false
+    description: 需要排在普通条目前面才开启；多个置顶内容可在下面用1、2、3排列。
   - name: published
     label: 在网站显示
     type: boolean
     description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
   - name: order
-    label: 排列序号
+    label: 置顶内容之间的序号（可不填）
     type: number
-    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
+    description: 只对开启置顶的内容生效，数字小的靠前，填1、2、3即可。普通内容不必填，自动按日期或年份从新到旧。
     options:
       min: 0
   - name: researchArea
@@ -1454,7 +1505,7 @@ content:
   - name: contributors
     label: 成员署名补充（可留空）
     type: string
-    description: 下方选过关联成员后，网页会自动显示这些姓名，不必重复填写。需完整作者顺序或补充校外合作者时，才在这里写完整署名；填写后以此为准。
+    description: 不填时自动显示下方所选关联成员的姓名。需要显示论文原文的全部作者及先后顺序、或加入外校作者时，在这里写完整名单；填写后整行以这里为准，不能只写新增的一人。
   - name: representative
     label: 同时展示在研究方向的代表成果中
     type: boolean
@@ -1469,7 +1520,7 @@ content:
       search: name,role
       value: '{path}'
       label: '{fields.name}'
-    description: 先在“团队成员”新增并保存，再选择参与此成果的人，可多选。用于自动显示姓名及在其个人页汇总成果；完整作者名单仍应写入论文引文或成果详情。
+    description: 选择已录入的参与者，可多选，表示这条成果属于谁，用于各人个人页自动收集成果。这里不表示第一作者或通讯作者；作者先后顺序以论文原文和完整引文为准。
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
@@ -1578,32 +1629,46 @@ content:
   view:
     fields:
     - title
+    - date
+    - pinned
     - published
-    - order
     primary: title
     sort:
+    - date
+    - pinned
     - order
     - title
     default:
-      sort: order
-      order: asc
+      sort: date
+      order: desc
   fields:
   - name: title
     label: 列表标题
     type: string
     required: true
+  - name: date
+    label: 日期（用于排序，可不填）
+    type: date
+    options:
+      format: yyyy-MM-dd
+    description: 填写获奖日期。普通条目按日期从新到旧；未知可留空，放在有日期的条目后。
   - name: text
     label: 荣誉内容
     type: text
     required: true
+  - name: pinned
+    label: 置顶（优先于日期）
+    type: boolean
+    default: false
+    description: 需要排在普通条目前面才开启；多个置顶内容可在下面用1、2、3排列。
   - name: published
     label: 在网站显示
     type: boolean
     description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
   - name: order
-    label: 排列序号
+    label: 置顶内容之间的序号（可不填）
     type: number
-    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
+    description: 只对开启置顶的内容生效，数字小的靠前，填1、2、3即可。普通内容不必填，自动按日期或年份从新到旧。
     options:
       min: 0
   - name: researchArea
@@ -1617,7 +1682,7 @@ content:
   - name: contributors
     label: 成员署名补充（可留空）
     type: string
-    description: 下方选过关联成员后，网页会自动显示这些姓名，不必重复填写。需完整作者顺序或补充校外合作者时，才在这里写完整署名；填写后以此为准。
+    description: 不填时自动显示下方所选关联成员的姓名。需要显示论文原文的全部作者及先后顺序、或加入外校作者时，在这里写完整名单；填写后整行以这里为准，不能只写新增的一人。
   - name: memberRefs
     label: 关联成员（选择已录入的教师或学生）
     type: reference
@@ -1627,7 +1692,7 @@ content:
       search: name,role
       value: '{path}'
       label: '{fields.name}'
-    description: 先在“团队成员”新增并保存，再选择参与此成果的人，可多选。用于自动显示姓名及在其个人页汇总成果；完整作者名单仍应写入论文引文或成果详情。
+    description: 选择已录入的参与者，可多选，表示这条成果属于谁，用于各人个人页自动收集成果。这里不表示第一作者或通讯作者；作者先后顺序以论文原文和完整引文为准。
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
@@ -1736,20 +1801,29 @@ content:
   view:
     fields:
     - title
+    - date
+    - pinned
     - published
-    - order
     primary: title
     sort:
+    - date
+    - pinned
     - order
     - title
     default:
-      sort: order
-      order: asc
+      sort: date
+      order: desc
   fields:
   - name: title
     label: 资料标题
     type: string
     required: true
+  - name: date
+    label: 日期（用于排序，可不填）
+    type: date
+    options:
+      format: yyyy-MM-dd
+    description: 填写资料发布或更新日期。普通条目按日期从新到旧；未知可留空，放在有日期的条目后。
   - name: content
     label: 正文内容（按这里的顺序显示）
     type: block
@@ -1870,14 +1944,19 @@ content:
     options:
       media: images
     hidden: true
+  - name: pinned
+    label: 置顶（优先于日期）
+    type: boolean
+    default: false
+    description: 需要排在普通条目前面才开启；多个置顶内容可在下面用1、2、3排列。
   - name: published
     label: 在网站显示
     type: boolean
     description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
   - name: order
-    label: 排列序号
+    label: 置顶内容之间的序号（可不填）
     type: number
-    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
+    description: 只对开启置顶的内容生效，数字小的靠前，填1、2、3即可。普通内容不必填，自动按日期或年份从新到旧。
     options:
       min: 0
   exclude:
