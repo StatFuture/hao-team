@@ -173,4 +173,23 @@ class VersionTwoTests(unittest.TestCase):
         self.write('versions/v2/data/settings.json', settings)
         self.assertEqual(len(self.data()['settings']['slides']),1)
 
+    def test_member_names_and_additional_personal_chapters(self):
+        self.write('versions/v2/content/members/member.json', {'name':'Member Name','published':True,
+                   'sections':[{'title':'Books','kind':'books'},{'title':'Patents','kind':'patents'}]})
+        for kind in ('projects','papers','patents','books','awards'):
+            self.write('versions/v2/content/'+kind+'/item.json', {'title':kind,'published':True,
+                       'memberRefs':['versions/v2/content/members/member.json']})
+        data=self.data()
+        for kind in ('projects','papers','patents','books','awards'):
+            item=next(x for x in data['collections'][kind] if x['id']=='team-item')
+            self.assertEqual(item['contributors'],'Member Name')
+        self.assertEqual([x['kind'] for x in data['collections']['members'][0]['renderedSections']],['books','patents'])
+
+    def test_resources_have_independent_location(self):
+        self.write('versions/v2/content/resources/guide.json', {'title':'Reading Guide','published':True,
+                   'target':'lab','position':'before'})
+        record=self.data()['collections']['resources'][0]
+        self.assertEqual(record['target'],'resources')
+        self.assertNotIn('position',record)
+
 if __name__ == '__main__': unittest.main()

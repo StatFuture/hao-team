@@ -38,10 +38,6 @@ content:
   path: versions/v2/data/settings.json
   format: json
   fields:
-  - name: demoMode
-    label: 显示排版演示资料（练习期间保留）
-    type: boolean
-    description: 目前保持开启。演示新闻、成员、项目和校园试验轮播不是真实团队资料，练习结束后统一清理。
   - name: showPersonalProfile
     label: 展示本仓库个人资料副本
     type: boolean
@@ -81,23 +77,28 @@ content:
         label: 20条
       - name: '50'
         label: 50条
+    description: 设置列表默认每页显示的数量，可选10、20或50。建议先用10，访客也能在列表中自行切换。
   - name: slides
     label: 首页横图
     type: object
     list:
-      collapsible: true
+      collapsible:
+        summary: '{caption}'
     fields:
     - name: id
       label: 图片标识
       type: string
+      hidden: true
+      required: false
     - name: image
       label: 横图
       type: image
       options:
         media: images
     - name: caption
-      label: 说明
+      label: 图片内容描述（不在图上显示）
       type: string
+      description: 如“团队学术交流合照”。用于辨认图片及屏幕阅读器，不会作为轮播字幕显示。
     - name: order
       label: 排列序号
       type: number
@@ -113,26 +114,8 @@ content:
           label: 完整显示（适合团队合照）
         - name: cover
           label: 铺满横幅（可能裁切）
-    - name: focusX
-      label: 横向显示位置（0左，50中，100右）
-      type: number
-      default: 50
-      options:
-        min: 0
-        max: 100
-    - name: focusY
-      label: 纵向显示位置（0上，50中，100下）
-      type: number
-      default: 50
-      options:
-        min: 0
-        max: 100
-    - name: layoutDemo
-      label: 排版演示图片
-      type: boolean
-      default: false
-      description: 开启时随多数据演示开关显示；换成正式团队照片后关闭此项。
-    description: 这里的照片用于首页轮播；文章配图应在对应文章正文中添加。多张照片按序号排列，自动与手动切换均保留。
+      description: 照片统一居中。完整显示保留整张照片，可能留白；铺满横幅可能裁掉边缘。合照建议完整显示。
+    description: 一项对应一张首页照片，按排列序号播放；可自动轮播，也可手动点箭头。照片统一居中。
   - name: autoPlay
     label: 首页图片自动轮换
     type: boolean
@@ -144,12 +127,8 @@ content:
     options:
       min: 2
       max: 15
-  - name: previewPlaceholders
-    label: 显示待补充的教师与新闻样本位置
-    type: boolean
-    description: 仅用于查看排版；不是实际成员或新闻。有真实新闻后自动显示真实内容。
-    default: false
-  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  description: 填写学校、团队名称、联系信息及首页轮播图片。轮播图片统一居中，图片描述不会显示为字幕。 填写后先点 Save 保存，再点“生成已保存草稿预览”，打开 https://statfuture.github.io/hao-team/preview/
+    检查；保存不会直接改变正式网站。
   actions:
   - name: build-draft-preview
     label: 生成已保存草稿预览
@@ -254,13 +233,8 @@ content:
         label: 附件说明（可不填）
         type: text
         description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
-  - &id002
-    name: layoutDemo
-    label: 属于排版演示资料
-    type: boolean
-    default: false
-    description: 目前练习期间保留；关闭网站演示开关后，这些记录不会显示。真实资料保持关闭。
-  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  description: 在网页“实验室简介”显示团队整体介绍。 填写后先点 Save 保存，再点“生成已保存草稿预览”，打开 https://statfuture.github.io/hao-team/preview/
+    检查；保存不会直接改变正式网站。
   actions:
   - name: build-draft-preview
     label: 生成已保存草稿预览
@@ -463,22 +437,18 @@ content:
   - name: published
     label: 在网站显示
     type: boolean
-    description: 关闭为草稿。保存后等待发布完成，再刷新网站检查。关闭显示不等于文件保密。
+    description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
     default: false
   - name: order
     label: 置顶新闻之间的序号
     type: number
-    description: 只对置顶新闻生效；普通新闻不必填写，按日期排序。
+    description: 数字越小越靠前，例如10排在20前。普通新闻只按日期排序，此处仅排列置顶新闻。
     options:
       min: 0
-  - name: layoutDemo
-    label: 属于排版演示资料
-    type: boolean
-    default: false
-    description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
   exclude:
   - .gitkeep
-  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  description: 在网页“团队新闻”显示；点击新闻进入图文详情。普通新闻按日期从新到旧排列。 填写后先点 Save 保存，再点“生成已保存草稿预览”，打开 https://statfuture.github.io/hao-team/preview/
+    检查；保存不会直接改变正式网站。
   actions:
   - name: build-draft-preview
     label: 生成已保存草稿预览
@@ -550,7 +520,7 @@ content:
     type: text
     description: 建议50至100字。完整介绍写到下方教师／学生章节中。
   - name: sections
-    label: 个人介绍章节（按这里的顺序显示）
+    label: 个人介绍（每项是个人页的一个小标题）
     type: object
     list:
       collapsible:
@@ -586,28 +556,33 @@ content:
         content:
         - type: text
           text: ''
-    description: 每个章节单独添加。可以上下移动章节，未填写的章节不显示。教师可参考个人简介、教育背景、工作经历、科研项目、代表论文、荣誉、教学与招生。学生只填适用内容。
+    description: 点小标题左边的箭头展开，里面先填标题，再选“这一部分怎样填写”。可添加、删除及拖动排序；空内容不显示。
     fields:
     - name: title
       label: 章节标题
       type: string
       required: true
     - name: kind
-      label: 内容来源
+      label: 这一部分怎样填写
       type: select
       options:
         values:
         - name: content
-          label: 手动编辑文字、图片等
+          label: 在下面填写文字、图片等
         - name: projects
-          label: 自动列出关联到本人的团队项目
+          label: 自动显示此人的科研项目
         - name: papers
-          label: 自动列出关联到本人的团队论文
+          label: 自动显示此人的学术论文
+        - name: patents
+          label: 自动显示此人的专利
+        - name: books
+          label: 自动显示此人的著作与教材
         - name: awards
-          label: 自动列出关联到本人的团队荣誉
+          label: 自动显示此人的荣誉奖励
       default: content
+      description: 自己写介绍就选“在下面填写”；需要自动汇总已录入成果时，选择对应类型。须先在相应成果里选择这位成员。
     - name: content
-      label: 本章节内容（自动列出成果时不用填写）
+      label: 这一部分的介绍内容（选自动显示时不用填）
       type: block
       list:
         collapsible:
@@ -695,10 +670,6 @@ content:
     label: 详细个人介绍
     type: text
     hidden: true
-  - name: demo
-    label: 试验用示例成员
-    type: boolean
-    description: 打开后网站会标注示例成员；正式资料请关闭。
   - name: email
     label: 邮箱
     type: string
@@ -708,22 +679,18 @@ content:
   - name: published
     label: 在网站显示
     type: boolean
-    description: 关闭为草稿。保存后等待发布完成，再刷新网站检查。关闭显示不等于文件保密。
+    description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
     default: false
   - name: order
     label: 排列序号
     type: number
-    description: 数字越小越靠前；同序号的新闻按日期从新到旧排列。
+    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
     options:
       min: 0
-  - name: layoutDemo
-    label: 属于排版演示资料
-    type: boolean
-    default: false
-    description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
   exclude:
   - .gitkeep
-  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  description: 在网页“学术团队”显示，分教师、学生；点击头像或姓名进入个人介绍。下方“个人介绍”每一项对应个人页的一个小标题。 填写后先点 Save 保存，再点“生成已保存草稿预览”，打开 https://statfuture.github.io/hao-team/preview/
+    检查；保存不会直接改变正式网站。
   actions:
   - name: build-draft-preview
     label: 生成已保存草稿预览
@@ -836,15 +803,14 @@ content:
     label: 在网站显示
     type: boolean
     default: false
-    description: 关闭为草稿。保存后等待发布完成，再刷新网站检查。关闭显示不等于文件保密。
+    description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
   - name: order
     label: 排列序号（越小越靠前）
     type: number
     default: 10
     options:
       min: 0
-    description: 一般填10、20、30，需要插在中间可以填15。
-  - *id002
+    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
   filename:
     template: '{year}{month}{day}{hour}{minute}{second}-{primary}.json'
     field: create
@@ -863,7 +829,8 @@ content:
     default:
       sort: order
       order: asc
-  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  description: 在网页“科学研究”的研究方向列表及首页显示；点击方向进入介绍及相关成果。先保存方向，再到项目、论文等条目中选择。 填写后先点 Save 保存，再点“生成已保存草稿预览”，打开 https://statfuture.github.io/hao-team/preview/
+    检查；保存不会直接改变正式网站。
   actions:
   - name: build-draft-preview
     label: 生成已保存草稿预览
@@ -898,46 +865,56 @@ content:
     type: string
     required: true
   - name: fields
-    label: 详细信息
+    label: 详细信息（每项分别填写）
     type: object
     list:
-      collapsible: true
+      collapsible:
+        summary: '{label}：{value}'
+      default:
+      - label: 项目来源
+        value: ''
+      - label: 项目编号
+        value: ''
+      - label: 起止时间
+        value: ''
+      - label: 负责人
+        value: ''
+      - label: 经费
+        value: ''
     fields:
     - name: label
-      label: 字段名称
+      label: 信息名称
       type: string
+      description: 如项目来源、作者或专利号。
     - name: value
-      label: 字段内容
+      label: 填写内容
       type: text
-    description: 逐项添加项目来源、编号、起止时间、负责人、经费等；字段名称填项目来源，字段内容填国家自然科学基金等。没有确认的信息不要编。
+      description: 填写这一项的实际内容；不知道可留空。
+    description: 点开每一项填写内容；点 Add an item 可增加一项。每项分开显示，不用把所有资料挤在同一个框里。
   - name: published
     label: 在网站显示
     type: boolean
-    description: 只控制第二版团队资料的发布，不改变第一版。
+    description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
   - name: order
     label: 排列序号
     type: number
-    description: 数字越小越靠前；同序号的新闻按日期从新到旧排列。
+    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
     options:
       min: 0
   - name: researchArea
-    label: 所属研究方向（从已建方向选择）
+    label: 所属研究方向（可选）
     type: reference
     options:
       collection: v2_directions
       value: '{primary}'
       label: '{primary}'
-    description: 先在研究方向栏目新增，再在这里选择，避免名称手打不一致。
+    description: 先在左侧“研究方向”新增并保存，再返回这里选择。留空仍在“科学研究 → 团队成果”显示，只是不归入某个方向。
   - name: contributors
-    label: 参与成员或负责人
+    label: 成员署名补充（可留空）
     type: string
-  - name: layoutDemo
-    label: 属于排版演示资料
-    type: boolean
-    default: false
-    description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
+    description: 下方选过关联成员后，网页会自动显示这些姓名，不必重复填写。需完整作者顺序或补充校外合作者时，才在这里写完整署名；填写后以此为准。
   - name: memberRefs
-    label: 关联成员（可选）
+    label: 关联成员（选择已录入的教师或学生）
     type: reference
     options:
       collection: v2_members
@@ -945,7 +922,7 @@ content:
       search: name,role
       value: '{path}'
       label: '{fields.name}'
-    description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
+    description: 先在“团队成员”新增并保存，再选择参与此成果的人，可多选。用于自动显示姓名及在其个人页汇总成果；完整作者名单仍应写入论文引文或成果详情。
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
@@ -1033,7 +1010,8 @@ content:
         description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   exclude:
   - .gitkeep
-  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  description: 在网页“科学研究 → 团队成果 → 科研项目”显示。选研究方向后，也在该方向的“相关项目”显示。 填写后先点 Save 保存，再点“生成已保存草稿预览”，打开 https://statfuture.github.io/hao-team/preview/
+    检查；保存不会直接改变正式网站。
   actions:
   - name: build-draft-preview
     label: 生成已保存草稿预览
@@ -1088,35 +1066,32 @@ content:
   - name: published
     label: 在网站显示
     type: boolean
-    description: 只控制第二版团队资料的发布，不改变第一版。
+    description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
   - name: order
     label: 排列序号
     type: number
-    description: 数字越小越靠前；同序号的新闻按日期从新到旧排列。
+    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
     options:
       min: 0
   - name: researchArea
-    label: 所属研究方向（从已建方向选择）
+    label: 所属研究方向（可选）
     type: reference
     options:
       collection: v2_directions
       value: '{primary}'
       label: '{primary}'
-    description: 先在研究方向栏目新增，再在这里选择，避免名称手打不一致。
+    description: 先在左侧“研究方向”新增并保存，再返回这里选择。留空仍在“科学研究 → 团队成果”显示，只是不归入某个方向。
   - name: contributors
-    label: 参与成员或负责人
+    label: 成员署名补充（可留空）
     type: string
+    description: 下方选过关联成员后，网页会自动显示这些姓名，不必重复填写。需完整作者顺序或补充校外合作者时，才在这里写完整署名；填写后以此为准。
   - name: representative
-    label: 作为所属研究方向的代表成果
+    label: 同时展示在研究方向的代表成果中
     type: boolean
     default: false
-  - name: layoutDemo
-    label: 属于排版演示资料
-    type: boolean
-    default: false
-    description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
+    description: 已选研究方向时才生效；关闭也仍在“科学研究 → 团队成果”中显示。
   - name: memberRefs
-    label: 关联成员（可选）
+    label: 关联成员（选择已录入的教师或学生）
     type: reference
     options:
       collection: v2_members
@@ -1124,7 +1099,7 @@ content:
       search: name,role
       value: '{path}'
       label: '{fields.name}'
-    description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
+    description: 先在“团队成员”新增并保存，再选择参与此成果的人，可多选。用于自动显示姓名及在其个人页汇总成果；完整作者名单仍应写入论文引文或成果详情。
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
@@ -1212,7 +1187,8 @@ content:
         description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   exclude:
   - .gitkeep
-  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  description: 在网页“科学研究 → 团队成果 → 学术论文”显示；选方向并开启代表成果后，也在方向详情显示。 填写后先点 Save 保存，再点“生成已保存草稿预览”，打开 https://statfuture.github.io/hao-team/preview/
+    检查；保存不会直接改变正式网站。
   actions:
   - name: build-draft-preview
     label: 生成已保存草稿预览
@@ -1246,42 +1222,62 @@ content:
     label: 专利名称
     type: string
     required: true
-  - name: lines
-    label: 详情
-    type: text
-    list: true
+  - name: fields
+    label: 详细信息（每项分别填写）
+    type: object
+    list:
+      collapsible:
+        summary: '{label}：{value}'
+      default:
+      - label: 发明人
+        value: ''
+      - label: 专利号
+        value: ''
+      - label: 专利类型
+        value: ''
+      - label: 申请或授权状态
+        value: ''
+      - label: 申请或授权日期
+        value: ''
+    description: 点开每一项填写内容；点 Add an item 可增加一项。每项分开显示，不用把所有资料挤在同一个框里。
+    fields:
+    - name: label
+      label: 信息名称
+      type: string
+      description: 如项目来源、作者或专利号。
+    - name: value
+      label: 填写内容
+      type: text
+      description: 填写这一项的实际内容；不知道可留空。
   - name: published
     label: 在网站显示
     type: boolean
-    description: 只控制第二版团队资料的发布，不改变第一版。
+    description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
   - name: order
     label: 排列序号
     type: number
-    description: 数字越小越靠前；同序号的新闻按日期从新到旧排列。
+    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
     options:
       min: 0
   - name: researchArea
-    label: 所属研究方向（从已建方向选择）
+    label: 所属研究方向（可选）
     type: reference
     options:
       collection: v2_directions
       value: '{primary}'
       label: '{primary}'
-    description: 先在研究方向栏目新增，再在这里选择，避免名称手打不一致。
+    description: 先在左侧“研究方向”新增并保存，再返回这里选择。留空仍在“科学研究 → 团队成果”显示，只是不归入某个方向。
   - name: contributors
-    label: 参与成员或负责人
+    label: 成员署名补充（可留空）
     type: string
+    description: 下方选过关联成员后，网页会自动显示这些姓名，不必重复填写。需完整作者顺序或补充校外合作者时，才在这里写完整署名；填写后以此为准。
   - name: representative
-    label: 作为所属研究方向的代表成果
+    label: 同时展示在研究方向的代表成果中
     type: boolean
     default: false
-  - name: layoutDemo
-    label: 属于排版演示资料
-    type: boolean
-    default: false
-    description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
+    description: 已选研究方向时才生效；关闭也仍在“科学研究 → 团队成果”中显示。
   - name: memberRefs
-    label: 关联成员（可选）
+    label: 关联成员（选择已录入的教师或学生）
     type: reference
     options:
       collection: v2_members
@@ -1289,7 +1285,7 @@ content:
       search: name,role
       value: '{path}'
       label: '{fields.name}'
-    description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
+    description: 先在“团队成员”新增并保存，再选择参与此成果的人，可多选。用于自动显示姓名及在其个人页汇总成果；完整作者名单仍应写入论文引文或成果详情。
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
@@ -1377,7 +1373,8 @@ content:
         description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   exclude:
   - .gitkeep
-  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  description: 在网页“科学研究 → 团队成果 → 专利”显示；选方向并开启代表成果后，也在方向详情显示。 填写后先点 Save 保存，再点“生成已保存草稿预览”，打开 https://statfuture.github.io/hao-team/preview/
+    检查；保存不会直接改变正式网站。
   actions:
   - name: build-draft-preview
     label: 生成已保存草稿预览
@@ -1408,54 +1405,63 @@ content:
       order: asc
   fields:
   - name: title
-    label: 教材名称
+    label: 书名或教材名称
     type: string
     required: true
   - name: fields
-    label: 详细信息
+    label: 详细信息（每项分别填写）
     type: object
     list:
-      collapsible: true
+      collapsible:
+        summary: '{label}：{value}'
+      default:
+      - label: 作者
+        value: ''
+      - label: 出版社
+        value: ''
+      - label: 出版年份
+        value: ''
+      - label: ISBN
+        value: ''
     fields:
     - name: label
-      label: 字段名称
+      label: 信息名称
       type: string
+      description: 如项目来源、作者或专利号。
     - name: value
-      label: 字段内容
+      label: 填写内容
       type: text
-    description: 逐项添加作者、出版社、出版年份、ISBN等；正文和封面图放在详细介绍内容段。
+      description: 填写这一项的实际内容；不知道可留空。
+    description: 点开每一项填写内容；点 Add an item 可增加一项。每项分开显示，不用把所有资料挤在同一个框里。
   - name: published
     label: 在网站显示
     type: boolean
-    description: 只控制第二版团队资料的发布，不改变第一版。
+    description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
   - name: order
     label: 排列序号
     type: number
-    description: 数字越小越靠前；同序号的新闻按日期从新到旧排列。
+    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
     options:
       min: 0
   - name: researchArea
-    label: 所属研究方向（从已建方向选择）
+    label: 所属研究方向（可选）
     type: reference
     options:
       collection: v2_directions
       value: '{primary}'
       label: '{primary}'
-    description: 先在研究方向栏目新增，再在这里选择，避免名称手打不一致。
+    description: 先在左侧“研究方向”新增并保存，再返回这里选择。留空仍在“科学研究 → 团队成果”显示，只是不归入某个方向。
   - name: contributors
-    label: 参与成员或负责人
+    label: 成员署名补充（可留空）
     type: string
+    description: 下方选过关联成员后，网页会自动显示这些姓名，不必重复填写。需完整作者顺序或补充校外合作者时，才在这里写完整署名；填写后以此为准。
   - name: representative
-    label: 作为所属研究方向的代表成果
+    label: 同时展示在研究方向的代表成果中
     type: boolean
     default: false
-  - name: layoutDemo
-    label: 属于排版演示资料
-    type: boolean
-    default: false
-    description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
+    description: 已选研究方向时才生效；关闭也仍在“科学研究 → 团队成果”中显示。
   - name: memberRefs
-    label: 关联成员（可选）
+    label: 关联成员（选择已录入的教师或学生）
     type: reference
     options:
       collection: v2_members
@@ -1463,7 +1469,7 @@ content:
       search: name,role
       value: '{path}'
       label: '{fields.name}'
-    description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
+    description: 先在“团队成员”新增并保存，再选择参与此成果的人，可多选。用于自动显示姓名及在其个人页汇总成果；完整作者名单仍应写入论文引文或成果详情。
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
@@ -1551,7 +1557,8 @@ content:
         description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   exclude:
   - .gitkeep
-  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  description: 在网页“科学研究 → 团队成果 → 著作与教材”显示；选方向并开启代表成果后，也在方向详情显示。 填写后先点 Save 保存，再点“生成已保存草稿预览”，打开 https://statfuture.github.io/hao-team/preview/
+    检查；保存不会直接改变正式网站。
   actions:
   - name: build-draft-preview
     label: 生成已保存草稿预览
@@ -1592,26 +1599,27 @@ content:
   - name: published
     label: 在网站显示
     type: boolean
-    description: 只控制第二版团队资料的发布，不改变第一版。
+    description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
   - name: order
     label: 排列序号
     type: number
-    description: 数字越小越靠前；同序号的新闻按日期从新到旧排列。
+    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
     options:
       min: 0
   - name: researchArea
-    label: 所属研究方向（从已建方向选择）
+    label: 所属研究方向（可选）
     type: reference
     options:
       collection: v2_directions
       value: '{primary}'
       label: '{primary}'
-    description: 先在研究方向栏目新增，再在这里选择，避免名称手打不一致。
+    description: 先在左侧“研究方向”新增并保存，再返回这里选择。留空仍在“科学研究 → 团队成果”显示，只是不归入某个方向。
   - name: contributors
-    label: 参与成员或负责人
+    label: 成员署名补充（可留空）
     type: string
+    description: 下方选过关联成员后，网页会自动显示这些姓名，不必重复填写。需完整作者顺序或补充校外合作者时，才在这里写完整署名；填写后以此为准。
   - name: memberRefs
-    label: 关联成员（可选）
+    label: 关联成员（选择已录入的教师或学生）
     type: reference
     options:
       collection: v2_members
@@ -1619,7 +1627,7 @@ content:
       search: name,role
       value: '{path}'
       label: '{fields.name}'
-    description: 选择参与老师或学生；教师章节选自动列出成果后，会显示这条记录。参与成员文字仍可作为补充说明。
+    description: 先在“团队成员”新增并保存，再选择参与此成果的人，可多选。用于自动显示姓名及在其个人页汇总成果；完整作者名单仍应写入论文引文或成果详情。
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
@@ -1707,7 +1715,8 @@ content:
         description: 写资料用途、阅读提示或版本信息，显示在下载链接下方；留空时不显示。
   exclude:
   - .gitkeep
-  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  description: 在网页“科学研究 → 团队成果 → 荣誉奖励”显示；还可在关联成员的自动荣誉章节显示。 填写后先点 Save 保存，再点“生成已保存草稿预览”，打开 https://statfuture.github.io/hao-team/preview/
+    检查；保存不会直接改变正式网站。
   actions:
   - name: build-draft-preview
     label: 生成已保存草稿预览
@@ -1830,36 +1839,6 @@ content:
     label: 说明
     type: text
     hidden: true
-  - name: target
-    label: 放置栏目
-    type: select
-    options:
-      values:
-      - name: resources
-        label: 学术资源列表
-      - name: home
-        label: 首页
-      - name: lab
-        label: 实验室简介
-      - name: news
-        label: 团队新闻
-      - name: team
-        label: 学术团队
-      - name: research
-        label: 科学研究
-      - name: admissions
-        label: 招生信息
-    description: 通常选择学术资源；只有确实要附加到其他栏目时才更改。不会加入首页轮播。
-  - name: position
-    label: 栏目中的位置
-    type: select
-    options:
-      values:
-      - name: before
-        label: 内容之前
-      - name: after
-        label: 内容之后
-    description: 只控制整条资源放在栏目内容的前面或后面，不决定正文中图片的位置。正文位置由内容段顺序决定。
   - name: images
     label: 配图
     type: image
@@ -1894,21 +1873,17 @@ content:
   - name: published
     label: 在网站显示
     type: boolean
-    description: 只控制第二版显示，不改变第一版。
+    description: 开启表示这条资料可在网页显示；关闭则隐藏。保存后先在预览中检查，只有正式发布后访客才看到修改。
   - name: order
     label: 排列序号
     type: number
-    description: 数字越小越靠前；同序号的新闻按日期从新到旧排列。
+    description: 数字越小越靠前，例如10排在20前；同一列表可依次填写10、20、30，方便日后插入。
     options:
       min: 0
-  - name: layoutDemo
-    label: 属于排版演示资料
-    type: boolean
-    default: false
-    description: 演示开关关闭后隐藏此记录。正式资料请新增记录并保持此项关闭。
   exclude:
   - .gitkeep
-  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  description: 在网页独立栏目“学术资源”显示。用于论文阅读指南、期刊分区、研究方法、工具和学习资料；不是重复录入团队发表论文的地方。 填写后先点 Save 保存，再点“生成已保存草稿预览”，打开 https://statfuture.github.io/hao-team/preview/
+    检查；保存不会直接改变正式网站。
   actions:
   - name: build-draft-preview
     label: 生成已保存草稿预览
@@ -2038,8 +2013,8 @@ content:
   - name: note
     label: 补充说明
     type: text
-  - *id002
-  description: '请在 drafts 工作区保存后预览；main 是正式内容。预览：https://statfuture.github.io/hao-team/preview/ 。保存草稿不等于正式发布。 '
+  description: 在网页“招生信息”显示团队招生说明、联系人及官方链接。 填写后先点 Save 保存，再点“生成已保存草稿预览”，打开 https://statfuture.github.io/hao-team/preview/
+    检查；保存不会直接改变正式网站。
   actions:
   - name: build-draft-preview
     label: 生成已保存草稿预览
