@@ -1,0 +1,46 @@
+{
+  "title": "【练习】文字图片视频附件的顺序测试",
+  "date": "2026-10-25",
+  "summary": "仅用于练习网站更新，不代表真实新闻。\n",
+  "content": [
+    {
+      "type": "text",
+      "heading": "练习开头",
+      "text": "<p>这是第一段文字。本条仅为操作练习。</p>"
+    },
+    {
+      "type": "image",
+      "image": "media/images/file.webp",
+      "caption": "校园练习图一，不是团队合照",
+      "width": "standard"
+    },
+    {
+      "type": "file",
+      "file": "media/files/file-1.pdf"
+    },
+    {
+      "type": "text",
+      "heading": "练习过程",
+      "text": "<p>这是中间文字，我会把附件移到这段前面。</p>"
+    },
+    {
+      "type": "image",
+      "image": "media/images/file-1.webp",
+      "caption": "校园练习图二，不是团队合照",
+      "width": "standard"
+    },
+    {
+      "type": "video",
+      "video": "media/videos/2-1.webm",
+      "caption": "两秒播放测试"
+    },
+    {
+      "type": "text",
+      "heading": "练习结尾",
+      "text": "<p>这是结尾，应排在视频后面。</p>"
+    }
+  ],
+  "pinned": false,
+  "published": true,
+  "layoutDemo": false
+}
