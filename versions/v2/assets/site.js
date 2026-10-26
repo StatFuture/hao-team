@@ -68,43 +68,22 @@ function pageRoute(page,size,group){const r=group?.querySelector('.records');if(
 main.addEventListener('click',e=>{const s=e.target.closest('[data-slide]');if(s){changeSlide(s.dataset.slide);}const p=e.target.closest('button[data-page]');if(p&&!p.disabled){const group=p.closest('.paged-group');pageRoute(p.dataset.page,group.querySelector('.records').dataset.size,group);}});
 main.addEventListener('change',e=>{if(e.target.matches('#page-size,.page-size')){const q=currentQuery();q.delete('page');q.delete('extrabefore');q.delete('extraafter');for(const key of [...q.keys()])if(key.endsWith('Page'))q.delete(key);q.set('size',e.target.value);location.hash=location.hash.split('?')[0]+'?'+q;}});
 main.addEventListener('keydown',e=>{if(e.target.closest('.hero')&&['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();changeSlide(e.key==='ArrowRight'?'next':'prev')}});
-// A brief dwell prevents accidental navigation while moving across the desktop menu.
-let navigationHoverTimer=null;
-const desktopHoverNavigation=window.matchMedia('(hover: hover) and (pointer: fine)');
-const usesDesktopNavigation=()=>desktopHoverNavigation.matches&&document.querySelector('.menu-toggle').getClientRects().length===0;
-function cancelNavigationHover(){clearTimeout(navigationHoverTimer);navigationHoverTimer=null;}
-const sectionRoutes=new Map(),routePositions=new Map();
-let visibleRoute=location.hash||'#/home',routeRestoreTicket=0;
+// Main sections change on click; each route starts at the top.
+let routeRenderTicket=0;
 const scrollRoot=document.documentElement,originalAnchor=scrollRoot.style.overflowAnchor;
-const sectionOf=hash=>{let key;try{key=decodeURIComponent(String(hash||'#/home').replace(/^#\//,'').split(/[/?]/)[0]);}catch{return '';}return Object.hasOwn(labels,key)?key:'';};
-function rememberVisibleRoute(){const key=sectionOf(visibleRoute);if(!key)return;sectionRoutes.set(key,visibleRoute);routePositions.set(visibleRoute,scrollY);}
-function switchRememberedSection(hash){
- cancelNavigationHover();const key=sectionOf(hash);if(!key||key===sectionOf(visibleRoute))return;
- rememberVisibleRoute();const target=sectionRoutes.get(key)||'#/'+key;if(location.hash!==target)location.hash=target;
-}
-function renderRememberedRoute(initial=false){
- if(!initial)rememberVisibleRoute();
- const next=location.hash||'#/home',key=sectionOf(next),y=routePositions.has(next)?routePositions.get(next):0,ticket=++routeRestoreTicket;
- scrollRoot.style.overflowAnchor='none';
- render();window.scrollTo({top:y,behavior:'instant'});visibleRoute=next;if(key)sectionRoutes.set(key,next);main.focus({preventScroll:true});
- requestAnimationFrame(()=>{if(ticket!==routeRestoreTicket)return;window.scrollTo({top:y,behavior:'instant'});requestAnimationFrame(()=>{if(ticket===routeRestoreTicket){window.scrollTo({top:y,behavior:'instant'});scrollRoot.style.overflowAnchor=originalAnchor;}});});
+function renderCurrentRoute(){
+ const ticket=++routeRenderTicket;scrollRoot.style.overflowAnchor='none';
+ render();window.scrollTo({top:0,behavior:'instant'});main.focus({preventScroll:true});
+ requestAnimationFrame(()=>{if(ticket!==routeRenderTicket)return;window.scrollTo({top:0,behavior:'instant'});requestAnimationFrame(()=>{if(ticket===routeRenderTicket){window.scrollTo({top:0,behavior:'instant'});scrollRoot.style.overflowAnchor=originalAnchor;}});});
 }
 for(const link of document.querySelectorAll('#navigation a')){
- link.addEventListener('pointerenter',event=>{
-  cancelNavigationHover();
-  if(event.pointerType!=='mouse'||!usesDesktopNavigation())return;
-  navigationHoverTimer=setTimeout(()=>{navigationHoverTimer=null;if(usesDesktopNavigation()&&link.matches(':hover'))switchRememberedSection(link.hash);},160);
+ link.addEventListener('click',event=>{
+  if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
+  event.preventDefault();if(location.hash!==link.hash)location.hash=link.hash;else renderCurrentRoute();
  });
- link.addEventListener('pointerleave',cancelNavigationHover);
- link.addEventListener('pointerdown',cancelNavigationHover);
- link.addEventListener('click',event=>{if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();switchRememberedSection(link.hash);});
 }
-window.addEventListener('hashchange',cancelNavigationHover);
-window.addEventListener('blur',cancelNavigationHover);
-window.addEventListener('resize',cancelNavigationHover);
-desktopHoverNavigation.addEventListener('change',cancelNavigationHover);
 document.querySelector('.skip').addEventListener('click',e=>{e.preventDefault();main.focus();main.scrollIntoView();});
 const {plainParagraphs,recordBody,renderMemberDetail,renderRecordDetail}=createReadingRenderer({esc,media,get,kinds,labels,shell,currentQuery,returnQuery,title,members,pageNumber,pageSize,isStudent,P,S,memberPhoto,emailLink,ext,demoBadge,list,fields,empty});
 if('scrollRestoration' in history)history.scrollRestoration='manual';
-window.addEventListener('hashchange',()=>renderRememberedRoute());renderRememberedRoute(true);
+window.addEventListener('hashchange',renderCurrentRoute);renderCurrentRoute();
 })();
