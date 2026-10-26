@@ -172,7 +172,9 @@ content:
   - name: content
     label: 正文内容（按这里的顺序显示）
     type: block
-    list: true
+    list:
+      collapsible:
+        summary: '{index} · {heading}{caption}{label}'
     blockKey: type
     description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
@@ -324,6 +326,8 @@ content:
       - type: file
         file: ''
         label: ''
+      collapsible:
+        summary: '{index} · {heading}{caption}{label}'
     blockKey: type
     description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
@@ -596,7 +600,9 @@ content:
     - name: content
       label: 本章节内容（自动列出成果时不用填写）
       type: block
-      list: true
+      list:
+        collapsible:
+          summary: '{index} · {heading}{caption}{label}'
       blockKey: type
       description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
       blocks:
@@ -731,7 +737,9 @@ content:
   - name: content
     label: 研究方向详细介绍
     type: block
-    list: true
+    list:
+      collapsible:
+        summary: '{index} · {heading}{caption}{label}'
     blockKey: type
     description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
@@ -924,7 +932,9 @@ content:
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
-    list: true
+    list:
+      collapsible:
+        summary: '{index} · {heading}{caption}{label}'
     blockKey: type
     description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
@@ -1097,7 +1107,9 @@ content:
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
-    list: true
+    list:
+      collapsible:
+        summary: '{index} · {heading}{caption}{label}'
     blockKey: type
     description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
@@ -1256,7 +1268,9 @@ content:
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
-    list: true
+    list:
+      collapsible:
+        summary: '{index} · {heading}{caption}{label}'
     blockKey: type
     description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
@@ -1424,7 +1438,9 @@ content:
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
-    list: true
+    list:
+      collapsible:
+        summary: '{index} · {heading}{caption}{label}'
     blockKey: type
     description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
@@ -1574,7 +1590,9 @@ content:
   - name: content
     label: 详细介绍与配图（可不填）
     type: block
-    list: true
+    list:
+      collapsible:
+        summary: '{index} · {heading}{caption}{label}'
     blockKey: type
     description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
@@ -1689,7 +1707,9 @@ content:
   - name: content
     label: 正文内容（按这里的顺序显示）
     type: block
-    list: true
+    list:
+      collapsible:
+        summary: '{index} · {heading}{caption}{label}'
     blockKey: type
     description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
@@ -1867,7 +1887,9 @@ content:
   - name: content
     label: 招生正文（申请要求、培养介绍、图片和附件）
     type: block
-    list: true
+    list:
+      collapsible:
+        summary: '{index} · {heading}{caption}{label}'
     blockKey: type
     description: 按从上到下显示；拖动左侧六点可换顺序，右侧垃圾桶可删除。空白段不显示。
     blocks:
