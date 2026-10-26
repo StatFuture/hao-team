@@ -1,6 +1,7 @@
 """Build version two without changing the version-one output or its source data."""
 from pathlib import Path
 import base64, copy, hashlib, io, json, math, shutil
+from datetime import date
 from PIL import Image, ImageOps
 from urllib.parse import urlsplit
 from bs4 import BeautifulSoup
@@ -9,6 +10,34 @@ from content_blocks import compile_record
 
 SHARED = ('projects', 'papers', 'patents', 'books', 'awards')
 PRIVATE = ('news', 'members', 'resources')
+
+TIMED = SHARED + ('news','resources')
+
+def time_value(value):
+    raw=value.get('date')
+    if raw not in (None,''):
+        try:
+            return int(date.fromisoformat(str(raw)[:10]).strftime('%Y%m%d'))
+        except ValueError:
+            raise ValueError('日期请填写有效的 YYYY-MM-DD 日期')
+    year=value.get('year')
+    if year not in (None,''):
+        try:
+            year=int(year)
+            if isinstance(value.get('year'),bool) or year<1000 or year>9999:raise ValueError()
+            return year*10000
+        except (ValueError,TypeError):
+            raise ValueError('年份请填写四位数字')
+    return 0
+
+def sort_records(records,kind):
+    if kind not in TIMED:
+        records.sort(key=lambda v:(v.get('order',9999),str(v.get('id',''))))
+        return
+    for v in records:v['sortDate']=time_value(v)
+    records.sort(key=lambda v:(not bool(v.get('pinned')),v.get('order',9999) if v.get('pinned') else 0,
+                               -v['sortDate'],str(v.get('id',''))))
+
 
 def load_records(folder):
     values = []
@@ -108,13 +137,7 @@ def build_v2(root=ROOT, dest=None):
             order = value.get('order') if value.get('order') is not None else 9999
             if isinstance(order, bool) or not isinstance(order, (int, float)) or not math.isfinite(order):
                 raise ValueError('Override order must be a finite number')
-        result.sort(key=lambda v: str(v.get('date', '')), reverse=True)
-        if kind == 'news':
-            # Normal news follows date; ordering numbers only arrange pinned news.
-            result.sort(key=lambda v: str(v.get('date','')), reverse=True)
-            result.sort(key=lambda v: (not bool(v.get('pinned')), v.get('order',9999) if v.get('pinned') else 0))
-        else:
-            result.sort(key=lambda v: (v.get('order',9999), v['id'] if not v.get('date') else ''))
+        sort_records(result,kind)
         data['collections'][kind] = result
     if set(overrides) - used:
         raise ValueError('Override points to a missing or unpublished shared record: ' + str(set(overrides) - used))
@@ -126,10 +149,7 @@ def build_v2(root=ROOT, dest=None):
         for value in team_records:
             value['id'] = 'team-' + value['id']
         data['collections'][kind].extend(team_records)
-        data['collections'][kind].sort(key=lambda v: str(v.get('date', '')), reverse=True)
-        data['collections'][kind].sort(key=lambda v: v.get('order', 9999))
-        if kind == 'papers':
-            data['collections'][kind].sort(key=lambda v: int(v.get('year') or 0),reverse=True)
+        sort_records(data['collections'][kind],kind)
     # A member selection is sufficient for display names; the optional credit line overrides it.
     member_names={v['id']:v.get('name','') for v in data['collections']['members']}
     for kind in SHARED:
@@ -275,3 +295,4 @@ def build_v2(root=ROOT, dest=None):
 
 if __name__ == '__main__':
     print(json.dumps(build_v2(), ensure_ascii=False))
+
