@@ -130,6 +130,20 @@ def build_v2(root=ROOT, dest=None):
         data['collections'][kind].sort(key=lambda v: v.get('order', 9999))
         if kind == 'papers':
             data['collections'][kind].sort(key=lambda v: int(v.get('year') or 0),reverse=True)
+    # A member selection is sufficient for display names; the optional credit line overrides it.
+    member_names={v['id']:v.get('name','') for v in data['collections']['members']}
+    for kind in SHARED:
+        for record in data['collections'][kind]:
+            if not str(record.get('contributors') or '').strip():
+                names=[]
+                for ref in record.get('memberRefs',[]) or []:
+                    name=member_names.get(Path(str(ref)).stem,'')
+                    if name and name not in names:names.append(name)
+                record['contributors']='、'.join(names)
+    # Academic resources have one stable public location.
+    for record in data['collections']['resources']:
+        record['target']='resources'
+        record.pop('position',None)
     settings.pop('recordOverrides', None)
     if settings.get('demoMode') is not True:
         for kind in data['collections']:
@@ -241,10 +255,10 @@ def build_v2(root=ROOT, dest=None):
         def axis(value):
             try: return max(0, min(100, float(value)))
             except (TypeError, ValueError): return 50
-        image['style'] = 'object-fit:' + ('cover' if first.get('imageFit') == 'cover' else 'contain') + ';object-position:' + str(axis(first.get('focusX', 50))) + '% ' + str(axis(first.get('focusY', 50))) + '%'
+        image['style'] = 'object-fit:' + ('cover' if first.get('imageFit') == 'cover' else 'contain') + ';object-position:' + '50' + '% ' + '50' + '%'
         hero = document.new_tag('section', **{'class': 'hero', 'aria-label': '团队风采'})
         if first.get('preview'):
-            hero['style'] = 'background-image:url(' + first['preview'] + ');background-size:' + ('cover' if first.get('imageFit') == 'cover' else 'contain') + ';background-position:' + str(axis(first.get('focusX', 50))) + '% ' + str(axis(first.get('focusY', 50))) + '%;background-repeat:no-repeat'
+            hero['style'] = 'background-image:url(' + first['preview'] + ');background-size:' + ('cover' if first.get('imageFit') == 'cover' else 'contain') + ';background-position:' + '50' + '% ' + '50' + '%;background-repeat:no-repeat'
         hero.append(image)
         document.main.clear()
         document.main.append(hero)

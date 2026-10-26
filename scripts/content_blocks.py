@@ -108,7 +108,7 @@ def compile_record(record, asset):
         if not isinstance(section,dict): raise ValueError('教师章节格式不正确')
         title=str(section.get('title','')).strip()
         kind=section.get('kind') or 'content'
-        if kind not in ('content','projects','papers','awards'): raise ValueError('未知教师章节来源')
+        if kind not in ('content','projects','papers','patents','books','awards'): raise ValueError('未知教师章节来源')
         html,_=compile_blocks(section.get('content',[]),asset)
         if kind=='content' and not html: continue
         if not title: raise ValueError('已填写内容的教师章节必须有标题')

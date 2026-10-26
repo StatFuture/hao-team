@@ -58,3 +58,6 @@ main .back,main .article .back{display:inline-flex;align-items:center;max-width:
 main .back:hover,main .article .back:hover{background:#eaf1f7;border-color:#bdcedd;color:#163f70;}
 .content-attachment-group .content-attachment{margin:0;}
 .content-flow .attachment-description{margin:9px 0 0;font-size:14px;line-height:1.8;color:var(--muted);}
+
+
+.research-output-list{margin-top:40px;border-top:1px solid #d7e1ea;padding-top:24px}.research-filter{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:20px}.research-filter h2{margin:0}.research-filter label{font-size:15px}.research-filter select{font:inherit;color:inherit;background:#fff;border:1px solid #cbd7df;padding:8px 12px;max-width:100%}@media(max-width:760px){.research-filter{align-items:flex-start;flex-direction:column}}
